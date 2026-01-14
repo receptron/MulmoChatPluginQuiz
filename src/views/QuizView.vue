@@ -1,41 +1,41 @@
 <template>
-  <div class="quiz-container">
-    <div v-if="quizData" class="quiz-content">
+  <div class="size-full overflow-y-auto p-8 bg-[#1a1a2e]">
+    <div v-if="quizData" class="max-w-3xl w-full mx-auto">
       <!-- Quiz Title -->
-      <h2 v-if="quizData.title" class="quiz-title">
+      <h2 v-if="quizData.title" class="text-[#f0f0f0] text-3xl font-bold mb-8 text-center">
         {{ quizData.title }}
       </h2>
 
       <!-- Questions -->
-      <div class="questions-list">
+      <div class="flex flex-col gap-6">
         <div
           v-for="(question, qIndex) in quizData.questions"
           :key="qIndex"
-          class="question-card"
+          class="bg-[#2d2d44] rounded-lg p-6 border-2 border-[#3d3d5c]"
         >
           <!-- Question Text -->
-          <div class="question-text">
-            <span class="question-number">{{ qIndex + 1 }}.</span>
+          <div class="text-white text-lg font-semibold mb-4">
+            <span class="text-blue-400 mr-2">{{ qIndex + 1 }}.</span>
             {{ question.question }}
           </div>
 
           <!-- Answer Choices -->
-          <div class="choices-list">
+          <div class="flex flex-col gap-3">
             <label
               v-for="(choice, cIndex) in question.choices"
               :key="cIndex"
               :class="getChoiceClass(qIndex, cIndex)"
-              class="choice-label"
+              class="flex items-start p-4 rounded-lg cursor-pointer transition-all duration-200 border-2"
             >
               <input
                 type="radio"
                 :name="`question-${qIndex}`"
                 :value="cIndex"
                 v-model="userAnswers[qIndex]"
-                class="choice-radio"
+                class="mt-1 mr-3 size-4 shrink-0"
               />
-              <span class="choice-text">
-                <span class="choice-letter">{{ String.fromCharCode(65 + cIndex) }}.</span>
+              <span class="text-white flex-1">
+                <span class="font-semibold mr-2">{{ String.fromCharCode(65 + cIndex) }}.</span>
                 {{ choice }}
               </span>
             </label>
@@ -44,19 +44,19 @@
       </div>
 
       <!-- Submit Button -->
-      <div class="submit-section">
+      <div class="mt-8 flex justify-center">
         <button
           @click="handleSubmit"
           :disabled="!allQuestionsAnswered"
-          :class="allQuestionsAnswered ? 'submit-btn-active' : 'submit-btn-disabled'"
-          class="submit-btn"
+          :class="allQuestionsAnswered ? 'bg-blue-600 hover:bg-blue-700' : 'bg-gray-600 cursor-not-allowed opacity-50'"
+          class="py-3 px-8 rounded-lg text-white font-semibold text-lg transition-colors border-none cursor-pointer"
         >
           Submit Answers
         </button>
       </div>
 
       <!-- Progress Indicator -->
-      <div class="progress-text">
+      <div class="mt-4 text-center text-gray-400 text-sm">
         {{ answeredCount }} / {{ quizData.questions.length }} questions answered
       </div>
     </div>
@@ -124,9 +124,9 @@ const allQuestionsAnswered = computed(() => {
 function getChoiceClass(qIndex: number, cIndex: number): string {
   const isSelected = userAnswers.value[qIndex] === cIndex;
   if (isSelected) {
-    return "choice-selected";
+    return "border-blue-500 bg-blue-500/20";
   }
-  return "choice-default";
+  return "border-[#4b4b6b] hover:border-[#6b6b8b] hover:bg-[#6b6b8b]/20";
 }
 
 function handleSubmit(): void {
@@ -148,138 +148,3 @@ function handleSubmit(): void {
   props.sendTextMessage(message);
 }
 </script>
-
-<style scoped>
-.quiz-container {
-  width: 100%;
-  height: 100%;
-  overflow-y: auto;
-  padding: 2rem;
-  background: #1a1a2e;
-}
-
-.quiz-content {
-  max-width: 48rem;
-  width: 100%;
-  margin: 0 auto;
-}
-
-.quiz-title {
-  color: #f0f0f0;
-  font-size: 1.875rem;
-  font-weight: bold;
-  margin-bottom: 2rem;
-  text-align: center;
-}
-
-.questions-list {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-.question-card {
-  background: #2d2d44;
-  border-radius: 0.5rem;
-  padding: 1.5rem;
-  border: 2px solid #3d3d5c;
-}
-
-.question-text {
-  color: white;
-  font-size: 1.125rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
-}
-
-.question-number {
-  color: #60a5fa;
-  margin-right: 0.5rem;
-}
-
-.choices-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-.choice-label {
-  display: flex;
-  align-items: flex-start;
-  padding: 1rem;
-  border-radius: 0.5rem;
-  cursor: pointer;
-  transition: all 0.2s;
-  border: 2px solid transparent;
-}
-
-.choice-default {
-  border-color: #4b4b6b;
-}
-
-.choice-default:hover {
-  border-color: #6b6b8b;
-  background: rgba(107, 107, 139, 0.2);
-}
-
-.choice-selected {
-  border-color: #3b82f6;
-  background: rgba(59, 130, 246, 0.2);
-}
-
-.choice-radio {
-  margin-top: 0.25rem;
-  margin-right: 0.75rem;
-  height: 1rem;
-  width: 1rem;
-  flex-shrink: 0;
-}
-
-.choice-text {
-  color: white;
-  flex: 1;
-}
-
-.choice-letter {
-  font-weight: 600;
-  margin-right: 0.5rem;
-}
-
-.submit-section {
-  margin-top: 2rem;
-  display: flex;
-  justify-content: center;
-}
-
-.submit-btn {
-  padding: 0.75rem 2rem;
-  border-radius: 0.5rem;
-  color: white;
-  font-weight: 600;
-  font-size: 1.125rem;
-  transition: background-color 0.2s;
-  border: none;
-  cursor: pointer;
-}
-
-.submit-btn-active {
-  background-color: #2563eb;
-}
-
-.submit-btn-active:hover {
-  background-color: #1d4ed8;
-}
-
-.submit-btn-disabled {
-  background-color: #4b5563;
-  cursor: not-allowed;
-  opacity: 0.5;
-}
-
-.progress-text {
-  margin-top: 1rem;
-  text-align: center;
-  color: #9ca3af;
-  font-size: 0.875rem;
-}
-</style>

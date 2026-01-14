@@ -12,7 +12,7 @@
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
     },
-    "./style.css": "./dist/mulmochat-plugin-quiz.css"
+    "./style.css": "./dist/quiz.css"
   },
   "files": [
     "dist"
@@ -27,7 +27,9 @@
     "vue": "^3.4.0"
   },
   "devDependencies": {
+    "@tailwindcss/vite": "^4.1.18",
     "@vitejs/plugin-vue": "^5.0.0",
+    "tailwindcss": "^4.1.18",
     "typescript": "~5.8.0",
     "vite": "^7.0.0",
     "vue": "^3.4.0",
