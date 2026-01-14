@@ -7,12 +7,12 @@
       <h2 class="text-gray-600 text-xl mb-4">JSON Data Input</h2>
       <div class="flex flex-wrap gap-2 mb-3">
         <button
-          v-for="(preset, index) in presets"
+          v-for="(sample, index) in samples"
           :key="index"
-          @click="loadPreset(preset)"
+          @click="loadSample(sample)"
           class="py-2 px-4 bg-indigo-100 border border-indigo-200 rounded-md cursor-pointer text-sm text-indigo-700 transition-all hover:bg-indigo-200 hover:border-indigo-300"
         >
-          {{ preset.name }}
+          {{ sample.name }}
         </button>
       </div>
       <textarea
@@ -58,116 +58,11 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-import { QuizView, QuizPreview } from "../src/index";
-import type { ToolResult } from "../src/types";
+import { QuizView, QuizPreview, plugin } from "../src/index";
+import type { ToolResult, ToolSample } from "../src/types";
 import type { QuizData } from "../src/plugin";
 
-// Preset dummy data
-const presets = [
-  {
-    name: "Geography Quiz",
-    data: {
-      title: "World Geography",
-      questions: [
-        {
-          question: "What is the capital of France?",
-          choices: ["London", "Berlin", "Paris", "Madrid"],
-          correctAnswer: 2,
-        },
-        {
-          question: "Which is the largest ocean?",
-          choices: ["Atlantic", "Indian", "Arctic", "Pacific"],
-          correctAnswer: 3,
-        },
-        {
-          question: "Mount Everest is located in which mountain range?",
-          choices: ["Alps", "Andes", "Himalayas", "Rockies"],
-          correctAnswer: 2,
-        },
-      ],
-    },
-  },
-  {
-    name: "Science Quiz",
-    data: {
-      title: "Science Basics",
-      questions: [
-        {
-          question: "Which planet is known as the Red Planet?",
-          choices: ["Venus", "Mars", "Jupiter", "Saturn"],
-          correctAnswer: 1,
-        },
-        {
-          question: "What is the chemical symbol for water?",
-          choices: ["O2", "CO2", "H2O", "NaCl"],
-          correctAnswer: 2,
-        },
-        {
-          question: "How many bones are in the adult human body?",
-          choices: ["186", "206", "226", "246"],
-          correctAnswer: 1,
-        },
-        {
-          question: "What is the speed of light?",
-          choices: [
-            "300,000 km/s",
-            "150,000 km/s",
-            "500,000 km/s",
-            "1,000,000 km/s",
-          ],
-          correctAnswer: 0,
-        },
-      ],
-    },
-  },
-  {
-    name: "Math Quiz",
-    data: {
-      title: "Math Challenge",
-      questions: [
-        {
-          question: "What is 15 x 15?",
-          choices: ["200", "215", "225", "250"],
-          correctAnswer: 2,
-        },
-        {
-          question: "What is the square root of 144?",
-          choices: ["10", "11", "12", "13"],
-          correctAnswer: 2,
-        },
-      ],
-    },
-  },
-  {
-    name: "No Correct Answer",
-    data: {
-      title: "Opinion Poll",
-      questions: [
-        {
-          question: "What is your favorite color?",
-          choices: ["Red", "Blue", "Green", "Yellow"],
-        },
-        {
-          question: "Which season do you prefer?",
-          choices: ["Spring", "Summer", "Autumn", "Winter"],
-        },
-      ],
-    },
-  },
-  {
-    name: "Single Question",
-    data: {
-      title: "Quick Question",
-      questions: [
-        {
-          question: "Is this quiz plugin working correctly?",
-          choices: ["Yes", "No"],
-          correctAnswer: 0,
-        },
-      ],
-    },
-  },
-];
+const samples = plugin.samples || [];
 
 const jsonInput = ref("");
 const jsonError = ref("");
@@ -180,8 +75,8 @@ const quizResult = ref<ToolResult<never, QuizData>>({
   jsonData: undefined,
 });
 
-const loadPreset = (preset: { name: string; data: QuizData }) => {
-  jsonInput.value = JSON.stringify(preset.data, null, 2);
+const loadSample = (sample: ToolSample) => {
+  jsonInput.value = JSON.stringify(sample.args, null, 2);
   jsonError.value = "";
   applyJson();
 };
@@ -210,13 +105,15 @@ const handleSendTextMessage = (text?: string) => {
   console.log("sendTextMessage called:", text);
 };
 
-const handleUpdate = (updated: ToolResult<never, QuizData>) => {
-  quizResult.value = updated;
+const handleUpdate = (updated: ToolResult) => {
+  quizResult.value = updated as ToolResult<never, QuizData>;
   console.log("Quiz updated:", updated);
 };
 
-// Load first preset on mount
+// Load first sample on mount
 onMounted(() => {
-  loadPreset(presets[0]);
+  if (samples.length > 0) {
+    loadSample(samples[0]);
+  }
 });
 </script>
