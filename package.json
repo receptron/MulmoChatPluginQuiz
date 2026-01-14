@@ -1,5 +1,5 @@
 {
-  "name": "mulmochat-plugin-quiz",
+  "name": "@mulmochat-plugin/quiz",
   "version": "0.1.0",
   "description": "Quiz plugin for MulmoChat",
   "type": "module",
