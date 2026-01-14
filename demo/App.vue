@@ -105,8 +105,8 @@ const handleSendTextMessage = (text?: string) => {
   console.log("sendTextMessage called:", text);
 };
 
-const handleUpdate = (updated: ToolResult<never, QuizData>) => {
-  quizResult.value = updated;
+const handleUpdate = (updated: ToolResult) => {
+  quizResult.value = updated as ToolResult<never, QuizData>;
   console.log("Quiz updated:", updated);
 };
 

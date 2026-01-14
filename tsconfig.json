@@ -20,6 +20,6 @@
     "noFallthroughCasesInSwitch": true,
     "outDir": "./dist"
   },
-  "include": ["src/**/*.ts", "src/**/*.vue"],
+  "include": ["src/**/*.ts", "src/**/*.vue", "demo/**/*.ts", "demo/**/*.vue"],
   "exclude": ["node_modules", "dist"]
 }

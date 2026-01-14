@@ -21,7 +21,7 @@
     "dev": "vite",
     "build": "vite build && vue-tsc --emitDeclarationOnly",
     "typecheck": "vue-tsc --noEmit",
-    "lint": "eslint src"
+    "lint": "eslint src demo"
   },
   "peerDependencies": {
     "vue": "^3.4.0"
