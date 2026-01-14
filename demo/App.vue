@@ -1,57 +1,57 @@
 <template>
-  <div class="demo-container">
-    <h1>Quiz Plugin Demo</h1>
+  <div class="max-w-3xl mx-auto">
+    <h1 class="text-gray-800 mb-8">Quiz Plugin Demo</h1>
 
     <!-- JSON Data Input Section -->
-    <div class="section">
-      <h2>JSON Data Input</h2>
-      <div class="preset-buttons">
+    <div class="bg-white rounded-lg p-5 mb-5 shadow-md">
+      <h2 class="text-gray-600 text-xl mb-4">JSON Data Input</h2>
+      <div class="flex flex-wrap gap-2 mb-3">
         <button
           v-for="(preset, index) in presets"
           :key="index"
           @click="loadPreset(preset)"
-          class="preset-btn"
+          class="py-2 px-4 bg-indigo-100 border border-indigo-200 rounded-md cursor-pointer text-sm text-indigo-700 transition-all hover:bg-indigo-200 hover:border-indigo-300"
         >
           {{ preset.name }}
         </button>
       </div>
       <textarea
         v-model="jsonInput"
-        class="json-input"
+        class="w-full p-3 font-mono text-sm border border-gray-300 rounded-md resize-y bg-gray-50 focus:outline-none focus:border-indigo-500 focus:ring-[3px] focus:ring-indigo-500/10"
         placeholder="Enter QuizData JSON here..."
         rows="10"
       ></textarea>
-      <div class="input-actions">
-        <button @click="applyJson" class="apply-btn">Apply JSON</button>
-        <span v-if="jsonError" class="error">{{ jsonError }}</span>
+      <div class="mt-3 flex items-center gap-3">
+        <button @click="applyJson" class="py-2.5 px-6 bg-indigo-600 text-white border-none rounded-md cursor-pointer text-sm font-medium transition-colors hover:bg-indigo-700">Apply JSON</button>
+        <span v-if="jsonError" class="text-red-600 text-sm">{{ jsonError }}</span>
       </div>
     </div>
 
-    <div class="section">
-      <h2>QuizView Component</h2>
-      <div class="component-wrapper">
+    <div class="bg-white rounded-lg p-5 mb-5 shadow-md">
+      <h2 class="text-gray-600 text-xl mb-4">QuizView Component</h2>
+      <div class="border border-gray-200 rounded p-4">
         <QuizView
           :selectedResult="quizResult"
           :sendTextMessage="handleSendTextMessage"
           @updateResult="handleUpdate"
         />
       </div>
-      <div v-if="lastSentMessage" class="sent-message">
-        <strong>Sent Message:</strong>
-        <pre>{{ lastSentMessage }}</pre>
+      <div v-if="lastSentMessage" class="mt-4 p-3 bg-emerald-50 border border-emerald-200 rounded-md">
+        <strong class="text-emerald-800 block mb-2">Sent Message:</strong>
+        <pre class="bg-emerald-100 m-0 whitespace-pre-wrap">{{ lastSentMessage }}</pre>
       </div>
     </div>
 
-    <div class="section">
-      <h2>QuizPreview Component</h2>
-      <div class="preview-wrapper">
+    <div class="bg-white rounded-lg p-5 mb-5 shadow-md">
+      <h2 class="text-gray-600 text-xl mb-4">QuizPreview Component</h2>
+      <div class="max-w-[200px]">
         <QuizPreview :result="quizResult" />
       </div>
     </div>
 
-    <div class="section">
-      <h2>Current Result Data</h2>
-      <pre>{{ JSON.stringify(quizResult, null, 2) }}</pre>
+    <div class="bg-white rounded-lg p-5 mb-5 shadow-md">
+      <h2 class="text-gray-600 text-xl mb-4">Current Result Data</h2>
+      <pre class="bg-gray-100 p-3 rounded overflow-x-auto text-xs">{{ JSON.stringify(quizResult, null, 2) }}</pre>
     </div>
   </div>
 </template>
@@ -220,147 +220,3 @@ onMounted(() => {
   loadPreset(presets[0]);
 });
 </script>
-
-<style>
-* {
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  padding: 20px;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  background: #f5f5f5;
-}
-
-.demo-container {
-  max-width: 800px;
-  margin: 0 auto;
-}
-
-h1 {
-  color: #333;
-  margin-bottom: 2rem;
-}
-
-h2 {
-  color: #555;
-  font-size: 1.2rem;
-  margin-bottom: 1rem;
-}
-
-.section {
-  background: white;
-  border-radius: 8px;
-  padding: 20px;
-  margin-bottom: 20px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.component-wrapper {
-  border: 1px solid #e0e0e0;
-  border-radius: 4px;
-  padding: 16px;
-}
-
-.preview-wrapper {
-  max-width: 200px;
-}
-
-pre {
-  background: #f8f8f8;
-  padding: 12px;
-  border-radius: 4px;
-  overflow-x: auto;
-  font-size: 12px;
-}
-
-/* JSON Input Styles */
-.preset-buttons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 12px;
-}
-
-.preset-btn {
-  padding: 8px 16px;
-  background: #e0e7ff;
-  border: 1px solid #c7d2fe;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 14px;
-  color: #4338ca;
-  transition: all 0.2s;
-}
-
-.preset-btn:hover {
-  background: #c7d2fe;
-  border-color: #a5b4fc;
-}
-
-.json-input {
-  width: 100%;
-  padding: 12px;
-  font-family: "Monaco", "Menlo", monospace;
-  font-size: 13px;
-  border: 1px solid #d1d5db;
-  border-radius: 6px;
-  resize: vertical;
-  background: #fafafa;
-}
-
-.json-input:focus {
-  outline: none;
-  border-color: #6366f1;
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
-}
-
-.input-actions {
-  margin-top: 12px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.apply-btn {
-  padding: 10px 24px;
-  background: #4f46e5;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 500;
-  transition: background 0.2s;
-}
-
-.apply-btn:hover {
-  background: #4338ca;
-}
-
-.error {
-  color: #dc2626;
-  font-size: 14px;
-}
-
-.sent-message {
-  margin-top: 16px;
-  padding: 12px;
-  background: #ecfdf5;
-  border: 1px solid #a7f3d0;
-  border-radius: 6px;
-}
-
-.sent-message strong {
-  color: #065f46;
-  display: block;
-  margin-bottom: 8px;
-}
-
-.sent-message pre {
-  background: #d1fae5;
-  margin: 0;
-  white-space: pre-wrap;
-}
-</style>
