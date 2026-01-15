@@ -1,6 +1,6 @@
 {
   "name": "@mulmochat-plugin/quiz",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Quiz plugin for MulmoChat",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -24,7 +24,7 @@
     "lint": "eslint src demo"
   },
   "peerDependencies": {
-    "vue": "^3.4.0"
+    "vue": "^3.5.0"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.1.18",
@@ -36,8 +36,8 @@
     "globals": "^17.0.0",
     "tailwindcss": "^4.1.18",
     "typescript": "~5.9.3",
-    "vite": "^7.0.0",
-    "vue": "^3.4.0",
+    "vite": "^7.3.1",
+    "vue": "^3.5.26",
     "vue-eslint-parser": "^10.2.0",
     "vue-tsc": "^3.2.2"
   },
