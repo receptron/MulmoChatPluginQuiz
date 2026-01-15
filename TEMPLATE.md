@@ -75,7 +75,8 @@ yarn dev
 
 | File | What to Implement |
 |------|-------------------|
-| `src/plugin/types.ts` | Data types, argument types, tool definition |
+| `src/plugin/types.ts` | Data types, argument types |
+| `src/plugin/tools.ts` | Tool name, tool definition (TOOL_NAME, TOOL_DEFINITION) |
 | `src/plugin/index.ts` | Plugin logic |
 | `src/plugin/View.vue` | Main view component |
 | `src/plugin/Preview.vue` | Sidebar preview |
@@ -144,12 +145,8 @@ sed -e 's/{plugin-name}/your-plugin-name/g' \
 
 ```typescript
 /**
- * {YourPlugin} Tool Definition and Types
+ * {YourPlugin} Types
  */
-
-// ============================================================================
-// Types
-// ============================================================================
 
 /** Data type (stored in result.data) */
 export interface {YourPlugin}ToolData {
@@ -165,10 +162,14 @@ export interface {YourPlugin}Args {
 export interface {YourPlugin}JsonData {
   // JSON returned to LLM (if needed)
 }
+```
 
-// ============================================================================
-// Tool Definition
-// ============================================================================
+#### src/plugin/tools.ts
+
+```typescript
+/**
+ * {YourPlugin} Tool Definition
+ */
 
 export const TOOL_NAME = "{toolName}";
 
@@ -190,7 +191,8 @@ export const TOOL_DEFINITION = {
 
 ```typescript
 import type { ToolPlugin, ToolContext, ToolResult } from "../common";
-import { TOOL_DEFINITION, TOOL_NAME, type {YourPlugin}ToolData, type {YourPlugin}Args } from "./types";
+import { TOOL_DEFINITION } from "./tools";
+import type { {YourPlugin}ToolData, {YourPlugin}Args } from "./types";
 import View from "./View.vue";
 import Preview from "./Preview.vue";
 
@@ -232,7 +234,7 @@ export const plugin: ToolPlugin<{YourPlugin}ToolData, unknown, {YourPlugin}Args>
 import { ref, watch, computed } from "vue";
 import type { ToolResult } from "../common";
 import type { {YourPlugin}ToolData } from "./types";
-import { TOOL_NAME } from "./types";
+import { TOOL_NAME } from "./tools";
 
 const props = defineProps<{
   selectedResult: ToolResult<{YourPlugin}ToolData>;
@@ -338,6 +340,7 @@ Required for `yarn dev` to work:
 ```
 □ Changed name, description in package.json
 □ Implemented src/plugin/types.ts
+□ Implemented src/plugin/tools.ts
 □ Implemented src/plugin/index.ts
 □ Implemented src/plugin/View.vue (using ref + watch pattern)
 □ Implemented src/plugin/Preview.vue
@@ -439,7 +442,8 @@ yarn dev
 
 | ファイル | 実装内容 |
 |---------|---------|
-| `src/plugin/types.ts` | データ型、引数型、ツール定義 |
+| `src/plugin/types.ts` | データ型、引数型 |
+| `src/plugin/tools.ts` | ツール名、ツール定義（TOOL_NAME, TOOL_DEFINITION） |
 | `src/plugin/index.ts` | プラグインロジック |
 | `src/plugin/View.vue` | メインビューコンポーネント |
 | `src/plugin/Preview.vue` | サイドバープレビュー |
@@ -508,12 +512,8 @@ sed -e 's/{plugin-name}/your-plugin-name/g' \
 
 ```typescript
 /**
- * {YourPlugin} Tool Definition and Types
+ * {YourPlugin} Types
  */
-
-// ============================================================================
-// Types
-// ============================================================================
 
 /** データ型（result.data に格納） */
 export interface {YourPlugin}ToolData {
@@ -529,10 +529,14 @@ export interface {YourPlugin}Args {
 export interface {YourPlugin}JsonData {
   // LLMに返すJSON（必要な場合）
 }
+```
 
-// ============================================================================
-// Tool Definition
-// ============================================================================
+#### src/plugin/tools.ts
+
+```typescript
+/**
+ * {YourPlugin} Tool Definition
+ */
 
 export const TOOL_NAME = "{toolName}";
 
@@ -554,7 +558,8 @@ export const TOOL_DEFINITION = {
 
 ```typescript
 import type { ToolPlugin, ToolContext, ToolResult } from "../common";
-import { TOOL_DEFINITION, TOOL_NAME, type {YourPlugin}ToolData, type {YourPlugin}Args } from "./types";
+import { TOOL_DEFINITION } from "./tools";
+import type { {YourPlugin}ToolData, {YourPlugin}Args } from "./types";
 import View from "./View.vue";
 import Preview from "./Preview.vue";
 
@@ -596,7 +601,7 @@ export const plugin: ToolPlugin<{YourPlugin}ToolData, unknown, {YourPlugin}Args>
 import { ref, watch, computed } from "vue";
 import type { ToolResult } from "../common";
 import type { {YourPlugin}ToolData } from "./types";
-import { TOOL_NAME } from "./types";
+import { TOOL_NAME } from "./tools";
 
 const props = defineProps<{
   selectedResult: ToolResult<{YourPlugin}ToolData>;
@@ -702,6 +707,7 @@ rollupOptions: {
 ```
 □ package.json の name, description を変更
 □ src/plugin/types.ts を実装
+□ src/plugin/tools.ts を実装
 □ src/plugin/index.ts を実装
 □ src/plugin/View.vue を実装（ref + watch パターン使用）
 □ src/plugin/Preview.vue を実装
