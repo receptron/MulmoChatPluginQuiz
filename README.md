@@ -14,24 +14,13 @@ This plugin is a reference implementation of the MulmoChat plugin system. Its si
 
 ### Adding to MulmoChat
 
-1. Build the plugin:
+1. Install the plugin:
 ```bash
-cd MulmoChatPluginQuiz
-yarn install
-yarn build
-yarn pack
+cd MulmoChat
+yarn add @mulmochat-plugin/quiz
 ```
 
-2. Add dependency to MulmoChat's `package.json`:
-```json
-{
-  "dependencies": {
-    "@mulmochat-plugin/quiz": "file:../MulmoChatPluginQuiz/mulmochat-plugin-quiz-v0.1.1.tgz"
-  }
-}
-```
-
-3. Import in MulmoChat's `src/tools/index.ts`:
+2. Import in MulmoChat's `src/tools/index.ts`:
 ```typescript
 import type { ToolPlugin } from "./types";
 
@@ -45,12 +34,6 @@ const pluginList = [
   // ... other plugins
   QuizPlugin,
 ];
-```
-
-4. Reinstall dependencies in MulmoChat:
-```bash
-cd MulmoChat
-yarn install --force
 ```
 
 ## Development
