@@ -1,5 +1,10 @@
 # MulmoChat Plugin Quiz
 
+> **📦 Template Repository**
+> This is the reference implementation for [MulmoChat](https://github.com/receptron/MulmoChat) plugins.
+> Use this repository as a template to create your own plugins.
+> See [TEMPLATE.md](./TEMPLATE.md) for detailed instructions.
+
 A quiz plugin for MulmoChat. Presents multiple choice quizzes to users.
 
 ## Overview

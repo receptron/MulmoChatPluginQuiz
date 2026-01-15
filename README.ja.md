@@ -1,5 +1,10 @@
 # MulmoChat Plugin Quiz
 
+> **📦 テンプレートリポジトリ**
+> これは [MulmoChat](https://github.com/receptron/MulmoChat) プラグインのリファレンス実装です。
+> このリポジトリをテンプレートとして使用し、独自のプラグインを作成できます。
+> 詳細は [TEMPLATE.md](./TEMPLATE.md) を参照してください。
+
 MulmoChat用のクイズプラグイン。複数選択式のクイズをユーザーに提示します。
 
 ## 概要
