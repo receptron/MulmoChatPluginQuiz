@@ -99,38 +99,27 @@ MulmoChatPluginQuiz/
 
 ## Creating a New Plugin
 
-Steps to create a new plugin based on this repository:
+Use the automated script or follow the detailed template guide:
 
-1. Copy the repository:
+### Quick Start (Recommended)
+
 ```bash
-cp -r MulmoChatPluginQuiz MulmoChatPluginYourPlugin
-cd MulmoChatPluginYourPlugin
-rm -rf .git node_modules dist *.tgz
-git init
+# Generate a new plugin
+./scripts/create-plugin.sh my-plugin "My Plugin" "Description of my plugin"
+
+# Move to generated directory and install
+cd ../MulmoChatPluginMyPlugin
+yarn install
+yarn dev
 ```
 
-2. Edit `package.json`:
-   - `name`: `mulmochat-plugin-yourplugin`
-   - `description`: Your plugin description
+### Manual Setup
 
-3. Edit `src/plugin/types.ts`:
-   - Define your types
-   - `TOOL_DEFINITION`: Define tool name, description, and parameters
-
-4. Edit `src/plugin/samples.ts`:
-   - Add sample data for testing
-
-5. Edit `src/plugin/index.ts`:
-   - Implement tool execution logic
-
-6. Edit `src/plugin/View.vue`:
-   - Main display component
-   - Props: `selectedResult`, `sendTextMessage`
-   - Emit: `updateResult`
-
-7. Edit `src/plugin/Preview.vue`:
-   - Sidebar preview component
-   - Props: `result`
+See [TEMPLATE.md](./TEMPLATE.md) for detailed instructions on:
+- Files that can be copied as-is
+- Files requiring modification (only `package.json`)
+- Plugin-specific implementation requirements
+- Important patterns (View.vue reactivity)
 
 ## ToolPlugin Interface
 

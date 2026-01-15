@@ -1,11 +1,7 @@
 /**
- * MulmoChat Quiz Plugin
+ * MulmoChat Plugin
  *
- * @example
- * ```typescript
- * import QuizPlugin from "@mulmochat-plugin/quiz";
- * import "@mulmochat-plugin/quiz/style.css";
- * ```
+ * See package.json for plugin details.
  */
 
 import "./style.css";
