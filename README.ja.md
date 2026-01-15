@@ -72,16 +72,16 @@ yarn lint
 MulmoChatPluginQuiz/
 ├── src/
 │   ├── index.ts          # エクスポート定義
-│   ├── plugin.ts         # クイズ固有のプラグイン実装
-│   ├── types.ts          # 共通型の再エクスポート（後方互換）
 │   ├── style.css         # Tailwind CSSエントリー
 │   ├── common/           # プラグイン非依存の共通コード
 │   │   ├── index.ts      # 共通エクスポート
 │   │   └── types.ts      # ToolPlugin, ToolResult など
-│   ├── views/
-│   │   └── QuizView.vue  # クイズ固有のビューコンポーネント
-│   └── previews/
-│       └── QuizPreview.vue  # クイズ固有のプレビュー
+│   └── plugin/           # クイズ固有の実装
+│       ├── index.ts      # プラグインインスタンスと実行ロジック
+│       ├── types.ts      # クイズの型とTOOL_DEFINITION
+│       ├── samples.ts    # テスト用サンプルデータ
+│       ├── View.vue      # メインビューコンポーネント
+│       └── Preview.vue   # サイドバープレビューコンポーネント
 ├── demo/                 # 汎用プラグインデモ（どのプラグインでも動作）
 │   ├── App.vue           # 動的コンポーネント描画
 │   └── main.ts
@@ -94,8 +94,7 @@ MulmoChatPluginQuiz/
 ### ディレクトリの役割
 
 - **src/common/**: プラグイン非依存の型とユーティリティ。新しいプラグインにコピーするか、このパッケージからインポート。
-- **src/plugin.ts**: クイズ固有の実装。独自のプラグインロジックに置き換える。
-- **src/views/**, **src/previews/**: クイズ固有のVueコンポーネント。独自のものを作成。
+- **src/plugin/**: クイズ固有の実装。独自のプラグインロジックに置き換える。
 - **demo/**: 任意のToolPluginで動作する汎用デモ。インポートを変更するだけで使用可能。
 
 ## 新しいプラグインの作成
@@ -114,23 +113,24 @@ git init
    - `name`: `mulmochat-plugin-yourplugin`
    - `description`: プラグインの説明
 
-3. `src/plugin.ts`を編集:
+3. `src/plugin/types.ts`を編集:
+   - 型を定義
    - `TOOL_DEFINITION`: ツール名、説明、パラメータを定義
-   - `execute`: ツール実行ロジックを実装
-   - 必要に応じて型定義を追加
 
-4. `src/views/YourView.vue`を作成:
+4. `src/plugin/samples.ts`を編集:
+   - テスト用サンプルデータを追加
+
+5. `src/plugin/index.ts`を編集:
+   - ツール実行ロジックを実装
+
+6. `src/plugin/View.vue`を編集:
    - メイン表示コンポーネント
    - Props: `selectedResult`, `sendTextMessage`
    - Emit: `updateResult`
 
-5. `src/previews/YourPreview.vue`を作成:
-   - サイドバー用のプレビューコンポーネント
+7. `src/plugin/Preview.vue`を編集:
+   - サイドバー用プレビューコンポーネント
    - Props: `result`
-
-6. `src/index.ts`でエクスポートを更新
-
-7. `demo/App.vue`をプラグインに合わせて更新
 
 ## ToolPlugin インターフェース
 
