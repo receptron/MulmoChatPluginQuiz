@@ -1,16 +1,20 @@
 # MulmoChat Plugin Quiz
 
-MulmoChat用のクイズプラグイン。複数選択式のクイズをユーザーに提示します。
+A quiz plugin for MulmoChat. Presents multiple choice quizzes to users.
 
-## 概要
+## Overview
 
-このプラグインは、MulmoChatのプラグインシステムのリファレンス実装です。外部依存がなく、サーバー通信も不要なシンプルな構造のため、新しいプラグインを作成する際のテンプレートとして使用できます。
+This plugin is a reference implementation of the MulmoChat plugin system. Its simple structure with no server communication makes it an ideal template for creating new plugins.
 
-## インストール
+- **Tailwind CSS 4** for styling
+- **TypeScript** for type-safe implementation
+- **ESLint** for static analysis
 
-### MulmoChatへの追加
+## Installation
 
-1. プラグインをビルド:
+### Adding to MulmoChat
+
+1. Build the plugin:
 ```bash
 cd MulmoChatPluginQuiz
 yarn install
@@ -18,87 +22,96 @@ yarn build
 yarn pack
 ```
 
-2. MulmoChatの`package.json`に依存関係を追加:
+2. Add dependency to MulmoChat's `package.json`:
 ```json
 {
   "dependencies": {
-    "mulmochat-plugin-quiz": "file:../MulmoChatPluginQuiz/mulmochat-plugin-quiz-v0.1.0.tgz"
+    "@mulmochat-plugin/quiz": "file:../MulmoChatPluginQuiz/mulmochat-plugin-quiz-v0.1.1.tgz"
   }
 }
 ```
 
-3. MulmoChatの`src/tools/index.ts`でインポート:
+3. Import in MulmoChat's `src/tools/index.ts`:
 ```typescript
 import type { ToolPlugin } from "./types";
 
 // Quiz plugin from npm package
-import { QuizPlugin as QuizPluginImport } from "mulmochat-plugin-quiz";
+import { QuizPlugin as QuizPluginImport } from "@mulmochat-plugin/quiz";
+import "@mulmochat-plugin/quiz/style.css"; // Tailwind CSS styles
 const QuizPlugin = QuizPluginImport as { plugin: ToolPlugin };
 
-// pluginListに追加
+// Add to pluginList
 const pluginList = [
   // ... other plugins
   QuizPlugin,
 ];
 ```
 
-4. MulmoChatで依存関係を再インストール:
+4. Reinstall dependencies in MulmoChat:
 ```bash
 cd MulmoChat
 yarn install --force
 ```
 
-## 開発
+## Development
 
-### セットアップ
+### Setup
 
 ```bash
 yarn install
 ```
 
-### 開発サーバー
+### Development Server
 
 ```bash
 yarn dev
 ```
 
-http://localhost:5173/ でデモページが表示されます。
+Demo page will be available at http://localhost:5173/
 
-### ビルド
+### Build
 
 ```bash
 yarn build
 ```
 
-### 型チェック
+### Type Check
 
 ```bash
 yarn typecheck
 ```
 
-## プラグイン構造
+### Lint
+
+```bash
+yarn lint
+```
+
+## Plugin Structure
 
 ```
 MulmoChatPluginQuiz/
 ├── src/
-│   ├── index.ts          # エクスポート定義
-│   ├── plugin.ts         # プラグイン実装
-│   ├── types.ts          # 型定義
+│   ├── index.ts          # Export definitions
+│   ├── plugin.ts         # Plugin implementation (includes samples)
+│   ├── types.ts          # Type definitions
+│   ├── style.css         # Tailwind CSS entry
 │   ├── views/
-│   │   └── QuizView.vue  # メインビューコンポーネント
+│   │   └── QuizView.vue  # Main view component
 │   └── previews/
-│       └── QuizPreview.vue  # サイドバープレビュー
-├── demo/                 # 開発用デモページ
+│       └── QuizPreview.vue  # Sidebar preview
+├── demo/                 # Development demo page
 ├── package.json
 ├── vite.config.ts
-└── tsconfig.json
+├── tsconfig.json
+└── eslint.config.js      # ESLint configuration
 ```
 
-## 新しいプラグインの作成
+## Creating a New Plugin
 
-このリポジトリをベースに新しいプラグインを作成する手順:
+Steps to create a new plugin based on this repository:
 
-1. リポジトリをコピー:
+1. Copy the repository:
 ```bash
 cp -r MulmoChatPluginQuiz MulmoChatPluginYourPlugin
 cd MulmoChatPluginYourPlugin
@@ -106,29 +119,29 @@ rm -rf .git node_modules dist *.tgz
 git init
 ```
 
-2. `package.json`を編集:
+2. Edit `package.json`:
    - `name`: `mulmochat-plugin-yourplugin`
-   - `description`: プラグインの説明
+   - `description`: Your plugin description
 
-3. `src/plugin.ts`を編集:
-   - `TOOL_DEFINITION`: ツール名、説明、パラメータを定義
-   - `execute`: ツール実行ロジックを実装
-   - 必要に応じて型定義を追加
+3. Edit `src/plugin.ts`:
+   - `TOOL_DEFINITION`: Define tool name, description, and parameters
+   - `execute`: Implement tool execution logic
+   - Add type definitions as needed
 
-4. `src/views/YourView.vue`を作成:
-   - メイン表示コンポーネント
+4. Create `src/views/YourView.vue`:
+   - Main display component
    - Props: `selectedResult`, `sendTextMessage`
    - Emit: `updateResult`
 
-5. `src/previews/YourPreview.vue`を作成:
-   - サイドバー用のプレビューコンポーネント
+5. Create `src/previews/YourPreview.vue`:
+   - Sidebar preview component
    - Props: `result`
 
-6. `src/index.ts`でエクスポートを更新
+6. Update exports in `src/index.ts`
 
-7. `demo/App.vue`をプラグインに合わせて更新
+7. Update `demo/App.vue` for your plugin
 
-## ToolPlugin インターフェース
+## ToolPlugin Interface
 
 ```typescript
 interface ToolPlugin<T, J, A> {
@@ -151,9 +164,10 @@ interface ToolPlugin<T, J, A> {
   systemPrompt?: string;
   fileUpload?: FileUploadConfig;
   config?: ToolPluginConfig;
+  samples?: ToolSample[];  // Sample data for testing
 }
 ```
 
-## ライセンス
+## License
 
 MIT

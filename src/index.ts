@@ -7,7 +7,8 @@
  *
  * @example Basic usage
  * ```typescript
- * import { plugin } from "mulmochat-plugin-quiz";
+ * import { plugin } from "@mulmochat-plugin/quiz";
+ * import "@mulmochat-plugin/quiz/style.css";
  *
  * // Plugin is ready to use
  * const tools = [plugin.toolDefinition];
@@ -15,7 +16,7 @@
  *
  * @example Using Vue components directly
  * ```typescript
- * import { QuizView, QuizPreview } from "mulmochat-plugin-quiz";
+ * import { QuizView, QuizPreview } from "@mulmochat-plugin/quiz";
  * ```
  */
 
@@ -64,7 +65,7 @@ import { plugin } from "./plugin";
 
 /**
  * QuizPlugin module matching MulmoChat's expected plugin structure.
- * Use this for direct import: `import { QuizPlugin } from "mulmochat-plugin-quiz"`
+ * Use this for direct import: `import { QuizPlugin } from "@mulmochat-plugin/quiz"`
  */
 export const QuizPlugin = { plugin };
 

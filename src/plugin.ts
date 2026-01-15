@@ -5,7 +5,8 @@
  *
  * @example Basic usage
  * ```typescript
- * import { plugin } from "mulmochat-plugin-quiz";
+ * import { plugin } from "@mulmochat-plugin/quiz";
+ * import "@mulmochat-plugin/quiz/style.css";
  * // Use plugin directly
  * ```
  */
