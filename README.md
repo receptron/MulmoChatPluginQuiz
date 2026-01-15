@@ -72,16 +72,16 @@ yarn lint
 MulmoChatPluginQuiz/
 ├── src/
 │   ├── index.ts          # Export definitions
-│   ├── plugin.ts         # Quiz-specific plugin implementation
-│   ├── types.ts          # Re-exports common types (backward compat)
 │   ├── style.css         # Tailwind CSS entry
 │   ├── common/           # Plugin-agnostic shared code
 │   │   ├── index.ts      # Common exports
 │   │   └── types.ts      # ToolPlugin, ToolResult, etc.
-│   ├── views/
-│   │   └── QuizView.vue  # Quiz-specific view component
-│   └── previews/
-│       └── QuizPreview.vue  # Quiz-specific preview
+│   └── plugin/           # Quiz-specific implementation
+│       ├── index.ts      # Plugin instance and execute logic
+│       ├── types.ts      # Quiz types and TOOL_DEFINITION
+│       ├── samples.ts    # Sample data for testing
+│       ├── View.vue      # Main view component
+│       └── Preview.vue   # Sidebar preview component
 ├── demo/                 # Generic plugin demo (works with any plugin)
 │   ├── App.vue           # Dynamic component rendering
 │   └── main.ts
@@ -94,8 +94,7 @@ MulmoChatPluginQuiz/
 ### Directory Purpose
 
 - **src/common/**: Plugin-agnostic types and utilities. Copy this to your new plugin or import from this package.
-- **src/plugin.ts**: Quiz-specific implementation. Replace with your plugin logic.
-- **src/views/**, **src/previews/**: Quiz-specific Vue components. Create your own.
+- **src/plugin/**: Quiz-specific implementation. Replace with your plugin logic.
 - **demo/**: Generic demo that works with any ToolPlugin. Just change the import.
 
 ## Creating a New Plugin
@@ -114,23 +113,24 @@ git init
    - `name`: `mulmochat-plugin-yourplugin`
    - `description`: Your plugin description
 
-3. Edit `src/plugin.ts`:
+3. Edit `src/plugin/types.ts`:
+   - Define your types
    - `TOOL_DEFINITION`: Define tool name, description, and parameters
-   - `execute`: Implement tool execution logic
-   - Add type definitions as needed
 
-4. Create `src/views/YourView.vue`:
+4. Edit `src/plugin/samples.ts`:
+   - Add sample data for testing
+
+5. Edit `src/plugin/index.ts`:
+   - Implement tool execution logic
+
+6. Edit `src/plugin/View.vue`:
    - Main display component
    - Props: `selectedResult`, `sendTextMessage`
    - Emit: `updateResult`
 
-5. Create `src/previews/YourPreview.vue`:
+7. Edit `src/plugin/Preview.vue`:
    - Sidebar preview component
    - Props: `result`
-
-6. Update exports in `src/index.ts`
-
-7. Update `demo/App.vue` for your plugin
 
 ## ToolPlugin Interface
 
