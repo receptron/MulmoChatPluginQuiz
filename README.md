@@ -76,19 +76,31 @@ yarn lint
 MulmoChatPluginQuiz/
 ├── src/
 │   ├── index.ts          # Export definitions
-│   ├── plugin.ts         # Plugin implementation (includes samples)
-│   ├── types.ts          # Type definitions
+│   ├── plugin.ts         # Quiz-specific plugin implementation
+│   ├── types.ts          # Re-exports common types (backward compat)
 │   ├── style.css         # Tailwind CSS entry
+│   ├── common/           # Plugin-agnostic shared code
+│   │   ├── index.ts      # Common exports
+│   │   └── types.ts      # ToolPlugin, ToolResult, etc.
 │   ├── views/
-│   │   └── QuizView.vue  # Main view component
+│   │   └── QuizView.vue  # Quiz-specific view component
 │   └── previews/
-│       └── QuizPreview.vue  # Sidebar preview
-├── demo/                 # Development demo page
+│       └── QuizPreview.vue  # Quiz-specific preview
+├── demo/                 # Generic plugin demo (works with any plugin)
+│   ├── App.vue           # Dynamic component rendering
+│   └── main.ts
 ├── package.json
 ├── vite.config.ts
 ├── tsconfig.json
-└── eslint.config.js      # ESLint configuration
+└── eslint.config.js
 ```
+
+### Directory Purpose
+
+- **src/common/**: Plugin-agnostic types and utilities. Copy this to your new plugin or import from this package.
+- **src/plugin.ts**: Quiz-specific implementation. Replace with your plugin logic.
+- **src/views/**, **src/previews/**: Quiz-specific Vue components. Create your own.
+- **demo/**: Generic demo that works with any ToolPlugin. Just change the import.
 
 ## Creating a New Plugin
 

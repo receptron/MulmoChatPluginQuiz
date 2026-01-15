@@ -76,19 +76,31 @@ yarn lint
 MulmoChatPluginQuiz/
 ├── src/
 │   ├── index.ts          # エクスポート定義
-│   ├── plugin.ts         # プラグイン実装（samples含む）
-│   ├── types.ts          # 型定義
+│   ├── plugin.ts         # クイズ固有のプラグイン実装
+│   ├── types.ts          # 共通型の再エクスポート（後方互換）
 │   ├── style.css         # Tailwind CSSエントリー
+│   ├── common/           # プラグイン非依存の共通コード
+│   │   ├── index.ts      # 共通エクスポート
+│   │   └── types.ts      # ToolPlugin, ToolResult など
 │   ├── views/
-│   │   └── QuizView.vue  # メインビューコンポーネント
+│   │   └── QuizView.vue  # クイズ固有のビューコンポーネント
 │   └── previews/
-│       └── QuizPreview.vue  # サイドバープレビュー
-├── demo/                 # 開発用デモページ
+│       └── QuizPreview.vue  # クイズ固有のプレビュー
+├── demo/                 # 汎用プラグインデモ（どのプラグインでも動作）
+│   ├── App.vue           # 動的コンポーネント描画
+│   └── main.ts
 ├── package.json
 ├── vite.config.ts
 ├── tsconfig.json
-└── eslint.config.js      # ESLint設定
+└── eslint.config.js
 ```
+
+### ディレクトリの役割
+
+- **src/common/**: プラグイン非依存の型とユーティリティ。新しいプラグインにコピーするか、このパッケージからインポート。
+- **src/plugin.ts**: クイズ固有の実装。独自のプラグインロジックに置き換える。
+- **src/views/**, **src/previews/**: クイズ固有のVueコンポーネント。独自のものを作成。
+- **demo/**: 任意のToolPluginで動作する汎用デモ。インポートを変更するだけで使用可能。
 
 ## 新しいプラグインの作成
 
