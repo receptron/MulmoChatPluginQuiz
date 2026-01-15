@@ -21,13 +21,13 @@
  */
 
 // ============================================================================
-// Styles (injected into JS)
+// Styles
 // ============================================================================
 
 import "./style.css";
 
 // ============================================================================
-// Core Types
+// Common Types (plugin-agnostic)
 // ============================================================================
 
 export type {
@@ -40,10 +40,10 @@ export type {
   FileUploadConfig,
   ToolPluginConfig,
   ToolSample,
-} from "./types";
+} from "./common";
 
 // ============================================================================
-// Plugin Types
+// Quiz-specific Types
 // ============================================================================
 
 export type { QuizQuestion, QuizData, QuizArgs, QuizResult } from "./plugin";

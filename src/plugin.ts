@@ -11,7 +11,7 @@
  * ```
  */
 
-import type { ToolPlugin, ToolContext, ToolResult } from "./types";
+import type { ToolPlugin, ToolContext, ToolResult } from "./common";
 import QuizView from "./views/QuizView.vue";
 import QuizPreview from "./previews/QuizPreview.vue";
 

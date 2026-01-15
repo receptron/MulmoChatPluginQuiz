@@ -1,11 +1,11 @@
 <template>
   <div class="max-w-3xl mx-auto">
-    <h1 class="text-gray-800 mb-8">Quiz Plugin Demo</h1>
+    <h1 class="text-gray-800 mb-8">{{ pluginName }} Demo</h1>
 
     <!-- JSON Data Input Section -->
     <div class="bg-white rounded-lg p-5 mb-5 shadow-md">
       <h2 class="text-gray-600 text-xl mb-4">JSON Data Input</h2>
-      <div class="flex flex-wrap gap-2 mb-3">
+      <div v-if="samples.length > 0" class="flex flex-wrap gap-2 mb-3">
         <button
           v-for="(sample, index) in samples"
           :key="index"
@@ -18,20 +18,27 @@
       <textarea
         v-model="jsonInput"
         class="w-full p-3 font-mono text-sm border border-gray-300 rounded-md resize-y bg-gray-50 focus:outline-none focus:border-indigo-500 focus:ring-[3px] focus:ring-indigo-500/10"
-        placeholder="Enter QuizData JSON here..."
+        placeholder="Enter JSON data here..."
         rows="10"
       ></textarea>
       <div class="mt-3 flex items-center gap-3">
-        <button @click="applyJson" class="py-2.5 px-6 bg-indigo-600 text-white border-none rounded-md cursor-pointer text-sm font-medium transition-colors hover:bg-indigo-700">Apply JSON</button>
+        <button
+          @click="applyJson"
+          class="py-2.5 px-6 bg-indigo-600 text-white border-none rounded-md cursor-pointer text-sm font-medium transition-colors hover:bg-indigo-700"
+        >
+          Apply JSON
+        </button>
         <span v-if="jsonError" class="text-red-600 text-sm">{{ jsonError }}</span>
       </div>
     </div>
 
-    <div class="bg-white rounded-lg p-5 mb-5 shadow-md">
-      <h2 class="text-gray-600 text-xl mb-4">QuizView Component</h2>
+    <!-- View Component -->
+    <div v-if="ViewComponent" class="bg-white rounded-lg p-5 mb-5 shadow-md">
+      <h2 class="text-gray-600 text-xl mb-4">View Component</h2>
       <div class="border border-gray-200 rounded p-4">
-        <QuizView
-          :selectedResult="quizResult"
+        <component
+          :is="ViewComponent"
+          :selectedResult="result"
           :sendTextMessage="handleSendTextMessage"
           @updateResult="handleUpdate"
         />
@@ -42,39 +49,50 @@
       </div>
     </div>
 
-    <div class="bg-white rounded-lg p-5 mb-5 shadow-md">
-      <h2 class="text-gray-600 text-xl mb-4">QuizPreview Component</h2>
+    <!-- Preview Component -->
+    <div v-if="PreviewComponent" class="bg-white rounded-lg p-5 mb-5 shadow-md">
+      <h2 class="text-gray-600 text-xl mb-4">Preview Component</h2>
       <div class="max-w-[200px]">
-        <QuizPreview :result="quizResult" />
+        <component :is="PreviewComponent" :result="result" />
       </div>
     </div>
 
+    <!-- Current Result Data -->
     <div class="bg-white rounded-lg p-5 mb-5 shadow-md">
       <h2 class="text-gray-600 text-xl mb-4">Current Result Data</h2>
-      <pre class="bg-gray-100 p-3 rounded overflow-x-auto text-xs">{{ JSON.stringify(quizResult, null, 2) }}</pre>
+      <pre class="bg-gray-100 p-3 rounded overflow-x-auto text-xs">{{ JSON.stringify(result, null, 2) }}</pre>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
-import { QuizView, QuizPreview, plugin } from "../src/index";
-import type { ToolResult, ToolSample } from "../src/types";
-import type { QuizData } from "../src/plugin";
+import { ref, computed, onMounted } from "vue";
+import { plugin } from "../src/plugin";
+import type { ToolResult, ToolSample, ToolPlugin } from "../src/common";
 
-const samples = plugin.samples || [];
+// Plugin configuration - cast to base ToolPlugin for generic demo usage
+const currentPlugin = plugin as unknown as ToolPlugin;
 
+// Computed properties from plugin
+const pluginName = computed(() => currentPlugin.toolDefinition.name);
+const toolName = computed(() => currentPlugin.toolDefinition.name);
+const samples = computed(() => currentPlugin.samples || []);
+const ViewComponent = computed(() => currentPlugin.viewComponent);
+const PreviewComponent = computed(() => currentPlugin.previewComponent);
+
+// State
 const jsonInput = ref("");
 const jsonError = ref("");
 const lastSentMessage = ref("");
 
-const quizResult = ref<ToolResult<never, QuizData>>({
-  toolName: "putQuestions",
-  message: "Quiz ready",
+const result = ref<ToolResult>({
+  toolName: toolName.value,
+  message: "Ready",
   title: "",
   jsonData: undefined,
 });
 
+// Actions
 const loadSample = (sample: ToolSample) => {
   jsonInput.value = JSON.stringify(sample.args, null, 2);
   jsonError.value = "";
@@ -83,14 +101,11 @@ const loadSample = (sample: ToolSample) => {
 
 const applyJson = () => {
   try {
-    const data = JSON.parse(jsonInput.value) as QuizData;
-    if (!data.questions || !Array.isArray(data.questions)) {
-      throw new Error("Invalid QuizData: questions array is required");
-    }
-    quizResult.value = {
-      toolName: "putQuestions",
-      message: "Quiz ready",
-      title: data.title || "Quiz",
+    const data = JSON.parse(jsonInput.value);
+    result.value = {
+      toolName: toolName.value,
+      message: "Data applied",
+      title: data.title || "",
       jsonData: data,
     };
     jsonError.value = "";
@@ -106,14 +121,14 @@ const handleSendTextMessage = (text?: string) => {
 };
 
 const handleUpdate = (updated: ToolResult) => {
-  quizResult.value = updated as ToolResult<never, QuizData>;
-  console.log("Quiz updated:", updated);
+  result.value = updated;
+  console.log("Result updated:", updated);
 };
 
 // Load first sample on mount
 onMounted(() => {
-  if (samples.length > 0) {
-    loadSample(samples[0]);
+  if (samples.value.length > 0) {
+    loadSample(samples.value[0]);
   }
 });
 </script>
