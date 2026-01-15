@@ -1,6 +1,10 @@
 # MulmoChat Plugin
 
-A plugin for MulmoChat.
+A plugin for [MulmoChat](https://github.com/receptron/MulmoChat) - a multi-modal voice chat application with OpenAI's GPT-4 Realtime API.
+
+## What this plugin does
+
+{plugin-description}
 
 ## Installation
 

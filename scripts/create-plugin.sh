@@ -51,12 +51,14 @@ echo -e "${YELLOW}Creating directory structure...${NC}"
 mkdir -p "$DEST_DIR/src/common"
 mkdir -p "$DEST_DIR/src/plugin"
 mkdir -p "$DEST_DIR/demo"
+mkdir -p "$DEST_DIR/.github/workflows"
 
 # Copy files that don't need modification
 echo -e "${YELLOW}Copying template files...${NC}"
 cp "$TEMPLATE_DIR/eslint.config.js" "$DEST_DIR/"
 cp "$TEMPLATE_DIR/vite.config.ts" "$DEST_DIR/"
 cp "$TEMPLATE_DIR/index.html" "$DEST_DIR/"
+cp "$TEMPLATE_DIR/.github/workflows/pull_request.yaml" "$DEST_DIR/.github/workflows/"
 cp "$TEMPLATE_DIR/src/shims-vue.d.ts" "$DEST_DIR/src/"
 cp "$TEMPLATE_DIR/src/common/types.ts" "$DEST_DIR/src/common/"
 cp "$TEMPLATE_DIR/src/common/index.ts" "$DEST_DIR/src/common/"
@@ -125,7 +127,7 @@ EOF
 
 # Generate README.md from template
 echo -e "${YELLOW}Generating README.md...${NC}"
-sed "s/{plugin-name}/${PLUGIN_NAME_KEBAB}/g" "$TEMPLATE_DIR/README.npm.md" > "$DEST_DIR/README.md"
+sed -e "s/{plugin-name}/${PLUGIN_NAME_KEBAB}/g" -e "s/{plugin-description}/${DESCRIPTION}/g" "$TEMPLATE_DIR/README.npm.md" > "$DEST_DIR/README.md"
 
 # Generate src/plugin/types.ts
 echo -e "${YELLOW}Generating src/plugin/types.ts...${NC}"

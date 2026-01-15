@@ -15,6 +15,8 @@ This guide explains how to create a new plugin using MulmoChatPluginQuiz as a te
 
 ## Quick Start
 
+### Option A: Use Script (Local)
+
 ```bash
 # 1. Generate new project with script
 ./scripts/create-plugin.sh my-plugin "My Plugin" "Description of my plugin"
@@ -29,6 +31,16 @@ yarn install
 yarn dev
 ```
 
+### Option B: Use GitHub Template
+
+> This repository is configured as a GitHub template.
+
+1. Click **"Use this template"** → **"Create a new repository"** on GitHub
+2. Clone your new repository
+3. Update `package.json` (name, description)
+4. Update `README.md` (replace `{plugin-name}` and `{plugin-description}`)
+5. Implement your plugin in `src/plugin/`
+
 ---
 
 ## File Structure Classification
@@ -39,6 +51,7 @@ yarn dev
 |------|-------------|
 | `eslint.config.js` | ESLint configuration |
 | `vite.config.ts` | Vite build configuration |
+| `.github/workflows/pull_request.yaml` | GitHub Actions CI |
 | `tsconfig.json` | TypeScript configuration |
 | `tsconfig.build.json` | TypeScript build configuration |
 | `index.html` | Demo HTML entry |
@@ -56,7 +69,7 @@ yarn dev
 | File | Copy As | What to Modify |
 |------|---------|----------------|
 | `package.json` | `package.json` | Package name, description |
-| `README.npm.md` | `README.md` | Replace `{plugin-name}` with your plugin name |
+| `README.npm.md` | `README.md` | Replace `{plugin-name}` and `{plugin-description}` |
 
 ### 🔧 Plugin-Specific Implementation Required
 
@@ -90,6 +103,8 @@ DEST="../MulmoChatPlugin{YourName}"
 cp eslint.config.js "$DEST/"
 cp vite.config.ts "$DEST/"
 cp index.html "$DEST/"
+mkdir -p "$DEST/.github/workflows"
+cp .github/workflows/pull_request.yaml "$DEST/.github/workflows/"
 cp src/shims-vue.d.ts "$DEST/src/"
 cp src/common/types.ts "$DEST/src/common/"
 cp src/common/index.ts "$DEST/src/common/"
@@ -116,9 +131,11 @@ Replace:
 
 #### README.md
 
-Copy `README.npm.md` as `README.md` and replace `{plugin-name}`:
+Copy `README.npm.md` as `README.md` and replace placeholders:
 ```bash
-sed 's/{plugin-name}/your-plugin-name/g' README.npm.md > "$DEST/README.md"
+sed -e 's/{plugin-name}/your-plugin-name/g' \
+    -e 's/{plugin-description}/Your plugin description/g' \
+    README.npm.md > "$DEST/README.md"
 ```
 
 ### Step 4: Plugin-Specific Implementation
@@ -362,6 +379,8 @@ Required for `yarn dev` to work:
 
 ## クイックスタート
 
+### 方法A: スクリプトを使用（ローカル）
+
 ```bash
 # 1. スクリプトで新規プロジェクトを生成
 ./scripts/create-plugin.sh my-plugin "My Plugin" "プラグインの説明"
@@ -376,6 +395,16 @@ yarn install
 yarn dev
 ```
 
+### 方法B: GitHub テンプレートを使用
+
+> このリポジトリは GitHub テンプレートとして設定されています。
+
+1. GitHub で **"Use this template"** → **"Create a new repository"** をクリック
+2. 新しいリポジトリをクローン
+3. `package.json` を更新（name, description）
+4. `README.md` を更新（`{plugin-name}` と `{plugin-description}` を置換）
+5. `src/plugin/` にプラグインを実装
+
 ---
 
 ## ファイル構成と分類
@@ -386,6 +415,7 @@ yarn dev
 |---------|------|
 | `eslint.config.js` | ESLint設定 |
 | `vite.config.ts` | Viteビルド設定 |
+| `.github/workflows/pull_request.yaml` | GitHub Actions CI |
 | `tsconfig.json` | TypeScript設定 |
 | `tsconfig.build.json` | TypeScriptビルド設定 |
 | `index.html` | デモHTMLエントリ |
@@ -403,7 +433,7 @@ yarn dev
 | ファイル | コピー先 | 変更内容 |
 |---------|---------|---------|
 | `package.json` | `package.json` | パッケージ名、説明 |
-| `README.npm.md` | `README.md` | `{plugin-name}` をプラグイン名に置換 |
+| `README.npm.md` | `README.md` | `{plugin-name}` と `{plugin-description}` を置換 |
 
 ### 🔧 プラグイン固有の実装が必要
 
@@ -437,6 +467,8 @@ DEST="../MulmoChatPlugin{YourName}"
 cp eslint.config.js "$DEST/"
 cp vite.config.ts "$DEST/"
 cp index.html "$DEST/"
+mkdir -p "$DEST/.github/workflows"
+cp .github/workflows/pull_request.yaml "$DEST/.github/workflows/"
 cp src/shims-vue.d.ts "$DEST/src/"
 cp src/common/types.ts "$DEST/src/common/"
 cp src/common/index.ts "$DEST/src/common/"
@@ -463,9 +495,11 @@ cp .gitignore "$DEST/"
 
 #### README.md
 
-`README.npm.md` を `README.md` としてコピーし、`{plugin-name}` を置換:
+`README.npm.md` を `README.md` としてコピーし、プレースホルダを置換:
 ```bash
-sed 's/{plugin-name}/your-plugin-name/g' README.npm.md > "$DEST/README.md"
+sed -e 's/{plugin-name}/your-plugin-name/g' \
+    -e 's/{plugin-description}/プラグインの説明/g' \
+    README.npm.md > "$DEST/README.md"
 ```
 
 ### Step 4: プラグイン固有の実装
