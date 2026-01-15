@@ -99,38 +99,27 @@ MulmoChatPluginQuiz/
 
 ## 新しいプラグインの作成
 
-このリポジトリをベースに新しいプラグインを作成する手順:
+自動生成スクリプトを使用するか、詳細なテンプレートガイドを参照してください:
 
-1. リポジトリをコピー:
+### クイックスタート（推奨）
+
 ```bash
-cp -r MulmoChatPluginQuiz MulmoChatPluginYourPlugin
-cd MulmoChatPluginYourPlugin
-rm -rf .git node_modules dist *.tgz
-git init
+# 新規プラグインを生成
+./scripts/create-plugin.sh my-plugin "My Plugin" "プラグインの説明"
+
+# 生成されたディレクトリに移動してインストール
+cd ../MulmoChatPluginMyPlugin
+yarn install
+yarn dev
 ```
 
-2. `package.json`を編集:
-   - `name`: `mulmochat-plugin-yourplugin`
-   - `description`: プラグインの説明
+### 手動セットアップ
 
-3. `src/plugin/types.ts`を編集:
-   - 型を定義
-   - `TOOL_DEFINITION`: ツール名、説明、パラメータを定義
-
-4. `src/plugin/samples.ts`を編集:
-   - テスト用サンプルデータを追加
-
-5. `src/plugin/index.ts`を編集:
-   - ツール実行ロジックを実装
-
-6. `src/plugin/View.vue`を編集:
-   - メイン表示コンポーネント
-   - Props: `selectedResult`, `sendTextMessage`
-   - Emit: `updateResult`
-
-7. `src/plugin/Preview.vue`を編集:
-   - サイドバー用プレビューコンポーネント
-   - Props: `result`
+詳細な手順は [TEMPLATE.md](./TEMPLATE.md) を参照:
+- そのままコピーできるファイル
+- 変更が必要なファイル（`package.json` のみ）
+- プラグイン固有の実装要件
+- 重要なパターン（View.vue のリアクティビティ）
 
 ## ToolPlugin インターフェース
 
