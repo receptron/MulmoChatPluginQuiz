@@ -22,12 +22,8 @@ yarn add @mulmochat-plugin/quiz
 
 2. Import in MulmoChat's `src/tools/index.ts`:
 ```typescript
-import type { ToolPlugin } from "./types";
-
-// Quiz plugin from npm package
-import { QuizPlugin as QuizPluginImport } from "@mulmochat-plugin/quiz";
-import "@mulmochat-plugin/quiz/style.css"; // Tailwind CSS styles
-const QuizPlugin = QuizPluginImport as { plugin: ToolPlugin };
+import QuizPlugin from "@mulmochat-plugin/quiz";
+import "@mulmochat-plugin/quiz/style.css";
 
 // Add to pluginList
 const pluginList = [
