@@ -5,6 +5,9 @@
  * Import from "@mulmochat-plugin/quiz/vue"
  */
 
+// Import styles for Vue components
+import "../style.css";
+
 import type { ToolPlugin, QuizData, QuizArgs } from "./types";
 import { pluginCore } from "../core/plugin";
 import View from "./View.vue";
@@ -55,3 +58,6 @@ export { TOOL_NAME, TOOL_DEFINITION, SAMPLES, executeQuiz, pluginCore } from "..
 
 // Export components for direct use
 export { View, Preview };
+
+// Default export for MulmoChat compatibility: { plugin }
+export default { plugin };

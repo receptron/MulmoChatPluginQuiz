@@ -1,36 +1,22 @@
 /**
  * MulmoChat Quiz Plugin
  *
- * Default export uses the Vue implementation.
- * For framework-agnostic core, import from "@mulmochat-plugin/quiz/core"
- * For explicit Vue import, use "@mulmochat-plugin/quiz/vue"
+ * Default export is the framework-agnostic core.
+ * For Vue implementation, import from "@mulmochat-plugin/quiz/vue"
  *
- * @example Default (Vue)
+ * @example Default (Core - framework-agnostic)
  * ```typescript
- * import QuizPlugin from "@mulmochat-plugin/quiz";
+ * import { pluginCore, TOOL_NAME, QuizData } from "@mulmochat-plugin/quiz";
+ * ```
+ *
+ * @example Vue implementation
+ * ```typescript
+ * import QuizPlugin from "@mulmochat-plugin/quiz/vue";
  * import "@mulmochat-plugin/quiz/style.css";
- * ```
- *
- * @example Core only (framework-agnostic)
- * ```typescript
- * import { pluginCore, TOOL_NAME } from "@mulmochat-plugin/quiz/core";
- * ```
- *
- * @example Vue explicit
- * ```typescript
- * import { plugin, View, Preview } from "@mulmochat-plugin/quiz/vue";
  * ```
  */
 
-import "./style.css";
-
-import { plugin } from "./vue";
-import type { ToolPlugin } from "./vue/types";
-
-// Default export for backward compatibility
-export default { plugin: plugin as ToolPlugin };
-
-// Named exports for convenience
-export { plugin } from "./vue";
-export type { ToolPlugin } from "./vue/types";
+// Default export is core (framework-agnostic)
+export * from "./core";
+export { pluginCore as default } from "./core";
 

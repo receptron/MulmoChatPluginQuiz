@@ -28,20 +28,21 @@ src/
 │   ├── View.vue    # Main view component
 │   ├── Preview.vue # Sidebar preview component
 │   └── index.ts    # Vue plugin (combines core + components)
-├── index.ts        # Default export (Vue for backward compatibility)
+├── index.ts        # Default export (core, framework-agnostic)
 └── style.css       # Styles
 ```
 
 ### Package Exports
 
 ```typescript
-// Default (Vue) - backward compatible
-import QuizPlugin from "@mulmochat-plugin/quiz";
+// Default (Core - framework-agnostic)
+import { pluginCore, TOOL_NAME, QuizData } from "@mulmochat-plugin/quiz";
 
-// Core only (framework-agnostic)
-import { pluginCore, TOOL_NAME } from "@mulmochat-plugin/quiz/core";
+// Vue implementation (for apps with UI)
+import QuizPlugin from "@mulmochat-plugin/quiz/vue";
+import "@mulmochat-plugin/quiz/style.css";
 
-// Vue explicit
+// Named Vue exports
 import { plugin, View, Preview } from "@mulmochat-plugin/quiz/vue";
 ```
 
@@ -473,20 +474,21 @@ src/
 │   ├── View.vue    # メインビューコンポーネント
 │   ├── Preview.vue # サイドバープレビュー
 │   └── index.ts    # Vueプラグイン（core + コンポーネント）
-├── index.ts        # デフォルトエクスポート（後方互換性のためVue）
+├── index.ts        # デフォルトエクスポート（core、フレームワーク非依存）
 └── style.css       # スタイル
 ```
 
 ### パッケージエクスポート
 
 ```typescript
-// デフォルト（Vue）- 後方互換
-import QuizPlugin from "@mulmochat-plugin/quiz";
+// デフォルト（Core - フレームワーク非依存）
+import { pluginCore, TOOL_NAME, QuizData } from "@mulmochat-plugin/quiz";
 
-// コアのみ（フレームワーク非依存）
-import { pluginCore, TOOL_NAME } from "@mulmochat-plugin/quiz/core";
+// Vue実装（UIを持つアプリ用）
+import QuizPlugin from "@mulmochat-plugin/quiz/vue";
+import "@mulmochat-plugin/quiz/style.css";
 
-// Vue明示
+// Vue名前付きエクスポート
 import { plugin, View, Preview } from "@mulmochat-plugin/quiz/vue";
 ```
 
