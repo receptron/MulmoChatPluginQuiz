@@ -13,6 +13,40 @@ This guide explains how to create a new plugin using MulmoChatPluginQuiz as a te
 3. Run yarn install && yarn dev to verify
 ```
 
+## New Architecture: Core/Vue Structure
+
+The plugin is now organized with a **framework-agnostic core** and **framework-specific UI layers**:
+
+```
+src/
+├── core/           # Framework-agnostic (no Vue/React dependencies)
+│   ├── types.ts    # Core types (ToolPluginCore, ToolResult, etc.)
+│   ├── plugin.ts   # Plugin logic (execute function, tool definition)
+│   └── index.ts    # Core exports
+├── vue/            # Vue-specific implementation
+│   ├── types.ts    # Vue types (ToolPlugin extends ToolPluginCore)
+│   ├── View.vue    # Main view component
+│   ├── Preview.vue # Sidebar preview component
+│   └── index.ts    # Vue plugin (combines core + components)
+├── index.ts        # Default export (Vue for backward compatibility)
+└── style.css       # Styles
+```
+
+### Package Exports
+
+```typescript
+// Default (Vue) - backward compatible
+import QuizPlugin from "@mulmochat-plugin/quiz";
+
+// Core only (framework-agnostic)
+import { pluginCore, TOOL_NAME } from "@mulmochat-plugin/quiz/core";
+
+// Vue explicit
+import { plugin, View, Preview } from "@mulmochat-plugin/quiz/vue";
+```
+
+---
+
 ## Quick Start
 
 ### Option A: Use Script (Local)
@@ -39,7 +73,7 @@ yarn dev
 2. Clone your new repository
 3. Update `package.json` (name, description)
 4. Update `README.md` (replace `{plugin-name}` and `{plugin-description}`)
-5. Implement your plugin in `src/plugin/`
+5. Implement your plugin in `src/core/` and `src/vue/`
 
 ---
 
@@ -50,18 +84,16 @@ yarn dev
 | File | Description |
 |------|-------------|
 | `eslint.config.js` | ESLint configuration |
-| `vite.config.ts` | Vite build configuration |
+| `vite.config.ts` | Vite build configuration (multi-entry) |
 | `.github/workflows/pull_request.yaml` | GitHub Actions CI |
 | `tsconfig.json` | TypeScript configuration |
 | `tsconfig.build.json` | TypeScript build configuration |
 | `index.html` | Demo HTML entry |
 | `.gitignore` | Git ignore patterns |
 | `src/shims-vue.d.ts` | Vue type definitions |
-| `src/common/types.ts` | Common types (ToolPlugin, etc.) |
-| `src/common/index.ts` | Common exports |
 | `src/style.css` | Base styles |
 | `demo/main.ts` | Demo entry point |
-| `demo/App.vue` | Demo test UI (generic, loads plugin dynamically) |
+| `demo/App.vue` | Demo test UI (generic) |
 | `src/index.ts` | Plugin entry point |
 
 ### 📝 Copy and Modify
@@ -75,132 +107,127 @@ yarn dev
 
 | File | What to Implement |
 |------|-------------------|
-| `src/plugin/types.ts` | Data types, argument types |
-| `src/plugin/tools.ts` | Tool name, tool definition (TOOL_NAME, TOOL_DEFINITION) |
-| `src/plugin/index.ts` | Plugin logic |
-| `src/plugin/View.vue` | Main view component |
-| `src/plugin/Preview.vue` | Sidebar preview |
-
-> **Note**: `demo/App.vue` is generic and works with any plugin. Customize only if you need plugin-specific testing features (e.g., file upload testing, API mocking).
+| `src/core/types.ts` | Core types + plugin-specific data types |
+| `src/core/plugin.ts` | Tool definition, execute function, samples |
+| `src/core/index.ts` | Core exports |
+| `src/vue/types.ts` | Vue-specific types |
+| `src/vue/View.vue` | Main view component |
+| `src/vue/Preview.vue` | Sidebar preview |
+| `src/vue/index.ts` | Vue plugin assembly |
 
 ---
 
-## Detailed Steps
+## Detailed Implementation
 
-### Step 1: Create Project Structure
+### src/core/types.ts
 
-```bash
-# Create new directory
-mkdir -p ../MulmoChatPlugin{YourName}/src/{common,plugin}
-mkdir -p ../MulmoChatPlugin{YourName}/demo
-```
-
-### Step 2: Copy Files As-Is
-
-```bash
-DEST="../MulmoChatPlugin{YourName}"
-
-# Common files (no changes needed)
-cp eslint.config.js "$DEST/"
-cp vite.config.ts "$DEST/"
-cp index.html "$DEST/"
-mkdir -p "$DEST/.github/workflows"
-cp .github/workflows/pull_request.yaml "$DEST/.github/workflows/"
-cp src/shims-vue.d.ts "$DEST/src/"
-cp src/common/types.ts "$DEST/src/common/"
-cp src/common/index.ts "$DEST/src/common/"
-cp src/style.css "$DEST/src/"
-cp src/index.ts "$DEST/src/"
-cp demo/main.ts "$DEST/demo/"
-cp demo/App.vue "$DEST/demo/"
-cp tsconfig.json "$DEST/"
-cp tsconfig.build.json "$DEST/"
-cp .gitignore "$DEST/"
-```
-
-### Step 3: Files Requiring Replacement
-
-#### package.json
-
-Replace:
-```json
-{
-  "name": "@mulmochat-plugin/{your-plugin-name}",  // ← Change
-  "description": "{Your plugin description}"       // ← Change
-}
-```
-
-#### README.md
-
-Copy `README.npm.md` as `README.md` and replace placeholders:
-```bash
-sed -e 's/{plugin-name}/your-plugin-name/g' \
-    -e 's/{plugin-description}/Your plugin description/g' \
-    README.npm.md > "$DEST/README.md"
-```
-
-### Step 4: Plugin-Specific Implementation
-
-#### src/plugin/types.ts
+Contains framework-agnostic types:
 
 ```typescript
 /**
- * {YourPlugin} Types
+ * Core Types (Framework-agnostic)
  */
 
-/** Data type (stored in result.data) */
-export interface {YourPlugin}ToolData {
+// Re-export base types (copy from Quiz plugin)
+export type BackendType = "textLLM" | "imageGen" | "audio" | "search" | "browse" | "map" | "mulmocast";
+
+export interface ToolContext {
+  currentResult?: ToolResult<unknown> | null;
+  app?: ToolContextApp;
+}
+
+export interface ToolResult<T = unknown, J = unknown> {
+  toolName?: string;
+  uuid?: string;
+  message: string;
+  title?: string;
+  jsonData?: J;
+  instructions?: string;
+  instructionsRequired?: boolean;
+  updating?: boolean;
+  cancelled?: boolean;
+  data?: T;
+  viewState?: Record<string, unknown>;
+}
+
+// ... other core types (ToolDefinition, JsonSchemaProperty, etc.)
+
+export interface ToolPluginCore<T = unknown, J = unknown, A extends object = object> {
+  toolDefinition: ToolDefinition;
+  execute: (context: ToolContext, args: A) => Promise<ToolResult<T, J>>;
+  generatingMessage: string;
+  isEnabled: (startResponse?: StartApiResponse | null) => boolean;
+  // ... other properties
+}
+
+// ============================================================================
+// Plugin-specific Types (add your types here)
+// ============================================================================
+
+/** Your plugin data type */
+export interface YourPluginData {
   // Plugin-specific data
 }
 
-/** Arguments type (passed from LLM) */
-export interface {YourPlugin}Args {
-  // Arguments for tool invocation
-}
-
-/** JSON output type (stored in result.jsonData, optional) */
-export interface {YourPlugin}JsonData {
-  // JSON returned to LLM (if needed)
+/** Arguments passed to the tool */
+export interface YourPluginArgs {
+  // Tool arguments
 }
 ```
 
-#### src/plugin/tools.ts
+### src/core/plugin.ts
+
+Contains the plugin logic:
 
 ```typescript
-/**
- * {YourPlugin} Tool Definition
- */
+import type {
+  ToolPluginCore,
+  ToolContext,
+  ToolResult,
+  ToolDefinition,
+  ToolSample,
+  YourPluginData,
+  YourPluginArgs,
+} from "./types";
 
-export const TOOL_NAME = "{toolName}";
+// ============================================================================
+// Tool Definition
+// ============================================================================
 
-export const TOOL_DEFINITION = {
-  type: "function" as const,
+export const TOOL_NAME = "yourToolName";
+
+export const TOOL_DEFINITION: ToolDefinition = {
+  type: "function",
   name: TOOL_NAME,
-  description: "{Tool description}",
+  description: "Your tool description",
   parameters: {
-    type: "object" as const,
+    type: "object",
     properties: {
       // Parameter definitions
     },
     required: ["..."],
   },
 };
-```
 
-#### src/plugin/index.ts
+// ============================================================================
+// Sample Data
+// ============================================================================
 
-```typescript
-import type { ToolPlugin, ToolContext, ToolResult } from "../common";
-import { TOOL_DEFINITION } from "./tools";
-import type { {YourPlugin}ToolData, {YourPlugin}Args } from "./types";
-import View from "./View.vue";
-import Preview from "./Preview.vue";
+export const SAMPLES: ToolSample[] = [
+  {
+    name: "Sample 1",
+    args: { /* sample arguments */ },
+  },
+];
 
-// Plugin execution function
-const execute{YourPlugin} = async (
-  context: ToolContext,
-  args: {YourPlugin}Args,
-): Promise<ToolResult<{YourPlugin}ToolData>> => {
+// ============================================================================
+// Execute Function
+// ============================================================================
+
+export const executeYourPlugin = async (
+  _context: ToolContext,
+  args: YourPluginArgs,
+): Promise<ToolResult<YourPluginData>> => {
   // Implementation
   return {
     message: "Success",
@@ -209,19 +236,56 @@ const execute{YourPlugin} = async (
   };
 };
 
-// Plugin export
-export const plugin: ToolPlugin<{YourPlugin}ToolData, unknown, {YourPlugin}Args> = {
+// ============================================================================
+// Core Plugin (without UI components)
+// ============================================================================
+
+export const pluginCore: ToolPluginCore<YourPluginData, unknown, YourPluginArgs> = {
   toolDefinition: TOOL_DEFINITION,
-  execute: execute{YourPlugin},
+  execute: executeYourPlugin,
   generatingMessage: "Processing...",
   isEnabled: () => true,
-  viewComponent: View,
-  previewComponent: Preview,
-  // samples: [...],  // Sample data for demo (optional)
+  samples: SAMPLES,
 };
 ```
 
-#### src/plugin/View.vue (Important Pattern)
+### src/core/index.ts
+
+```typescript
+// Core types
+export type {
+  BackendType,
+  ToolContext,
+  ToolResult,
+  ToolPluginCore,
+  // ... your plugin types
+  YourPluginData,
+  YourPluginArgs,
+} from "./types";
+
+// Core plugin
+export { pluginCore, TOOL_NAME, TOOL_DEFINITION, SAMPLES, executeYourPlugin } from "./plugin";
+```
+
+### src/vue/types.ts
+
+```typescript
+import type { Component } from "vue";
+import type { ToolPluginCore } from "../core/types";
+
+type VueComponent = Component<any>;
+
+export interface ToolPlugin<T = unknown, J = unknown, A extends object = object>
+  extends ToolPluginCore<T, J, A> {
+  viewComponent?: VueComponent;
+  previewComponent?: VueComponent;
+}
+
+// Re-export core types
+export type { ToolContext, ToolResult, ToolPluginCore, /* ... */ } from "../core/types";
+```
+
+### src/vue/View.vue (Important Pattern)
 
 ```vue
 <template>
@@ -231,13 +295,12 @@ export const plugin: ToolPlugin<{YourPlugin}ToolData, unknown, {YourPlugin}Args>
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed } from "vue";
-import type { ToolResult } from "../common";
-import type { {YourPlugin}ToolData } from "./types";
-import { TOOL_NAME } from "./tools";
+import { ref, watch } from "vue";
+import type { ToolResult, YourPluginData } from "../core/types";
+import { TOOL_NAME } from "../core/plugin";
 
 const props = defineProps<{
-  selectedResult: ToolResult<{YourPlugin}ToolData>;
+  selectedResult: ToolResult<YourPluginData>;
   sendTextMessage: (text?: string) => void;
 }>();
 
@@ -246,13 +309,13 @@ const emit = defineEmits<{
 }>();
 
 // ⚠️ IMPORTANT: Use ref + watch pattern (computed doesn't work properly)
-const data = ref<{YourPlugin}ToolData | null>(null);
+const data = ref<YourPluginData | null>(null);
 
 watch(
   () => props.selectedResult,
   (newResult) => {
     if (newResult?.toolName === TOOL_NAME && newResult.data) {
-      data.value = newResult.data as {YourPlugin}ToolData;
+      data.value = newResult.data as YourPluginData;
     }
   },
   { immediate: true, deep: true },  // ← immediate and deep are required
@@ -260,7 +323,7 @@ watch(
 </script>
 ```
 
-#### src/plugin/Preview.vue
+### src/vue/Preview.vue
 
 ```vue
 <template>
@@ -271,21 +334,35 @@ watch(
 
 <script setup lang="ts">
 import { computed } from "vue";
-import type { ToolResult } from "../common";
-import type { {YourPlugin}ToolData } from "./types";
+import type { ToolResult, YourPluginData } from "../core/types";
 
 const props = defineProps<{
-  result: ToolResult<{YourPlugin}ToolData>;
+  result: ToolResult<YourPluginData>;
 }>();
 
 const data = computed(() => props.result.data);
 </script>
 ```
 
-#### demo/App.vue
+### src/vue/index.ts
 
-Reference Quiz's `demo/App.vue` to implement test UI for your plugin.
-Use Quiz pattern for `jsonData`, PDF pattern for `data`.
+```typescript
+import type { ToolPlugin, YourPluginData, YourPluginArgs } from "./types";
+import { pluginCore } from "../core/plugin";
+import View from "./View.vue";
+import Preview from "./Preview.vue";
+
+export const plugin: ToolPlugin<YourPluginData, unknown, YourPluginArgs> = {
+  ...pluginCore,
+  viewComponent: View,
+  previewComponent: Preview,
+};
+
+// Re-export types and core utilities
+export type { ToolPlugin } from "./types";
+export { TOOL_NAME, TOOL_DEFINITION, SAMPLES, pluginCore } from "../core/plugin";
+export { View, Preview };
+```
 
 ---
 
@@ -339,12 +416,13 @@ Required for `yarn dev` to work:
 
 ```
 □ Changed name, description in package.json
-□ Implemented src/plugin/types.ts
-□ Implemented src/plugin/tools.ts
-□ Implemented src/plugin/index.ts
-□ Implemented src/plugin/View.vue (using ref + watch pattern)
-□ Implemented src/plugin/Preview.vue
-□ Implemented demo/App.vue
+□ Implemented src/core/types.ts (with plugin-specific types)
+□ Implemented src/core/plugin.ts (tool definition, execute, samples)
+□ Implemented src/core/index.ts (exports)
+□ Implemented src/vue/types.ts
+□ Implemented src/vue/View.vue (using ref + watch pattern)
+□ Implemented src/vue/Preview.vue
+□ Implemented src/vue/index.ts
 □ Ran yarn install
 □ No errors in yarn typecheck
 □ No errors in yarn lint
@@ -358,7 +436,7 @@ Required for `yarn dev` to work:
 
 | Plugin | Features |
 |--------|----------|
-| Quiz | Uses `jsonData`, has sample data |
+| Quiz | Uses `jsonData`, has sample data, core/vue structure |
 | Form | Uses `jsonData`, has validation |
 | SummarizePdf | Uses `data`, file upload, bundles external library (marked) |
 
@@ -379,6 +457,40 @@ Required for `yarn dev` to work:
 2. プラグイン固有のコードを実装
 3. yarn install && yarn dev で動作確認
 ```
+
+## 新アーキテクチャ: Core/Vue 構造
+
+プラグインは**フレームワーク非依存のcore**と**フレームワーク固有のUI層**で構成されます:
+
+```
+src/
+├── core/           # フレームワーク非依存（Vue/React依存なし）
+│   ├── types.ts    # コア型定義（ToolPluginCore, ToolResult等）
+│   ├── plugin.ts   # プラグインロジック（execute関数、ツール定義）
+│   └── index.ts    # コアエクスポート
+├── vue/            # Vue固有の実装
+│   ├── types.ts    # Vue型定義（ToolPlugin extends ToolPluginCore）
+│   ├── View.vue    # メインビューコンポーネント
+│   ├── Preview.vue # サイドバープレビュー
+│   └── index.ts    # Vueプラグイン（core + コンポーネント）
+├── index.ts        # デフォルトエクスポート（後方互換性のためVue）
+└── style.css       # スタイル
+```
+
+### パッケージエクスポート
+
+```typescript
+// デフォルト（Vue）- 後方互換
+import QuizPlugin from "@mulmochat-plugin/quiz";
+
+// コアのみ（フレームワーク非依存）
+import { pluginCore, TOOL_NAME } from "@mulmochat-plugin/quiz/core";
+
+// Vue明示
+import { plugin, View, Preview } from "@mulmochat-plugin/quiz/vue";
+```
+
+---
 
 ## クイックスタート
 
@@ -406,7 +518,7 @@ yarn dev
 2. 新しいリポジトリをクローン
 3. `package.json` を更新（name, description）
 4. `README.md` を更新（`{plugin-name}` と `{plugin-description}` を置換）
-5. `src/plugin/` にプラグインを実装
+5. `src/core/` と `src/vue/` にプラグインを実装
 
 ---
 
@@ -417,18 +529,16 @@ yarn dev
 | ファイル | 説明 |
 |---------|------|
 | `eslint.config.js` | ESLint設定 |
-| `vite.config.ts` | Viteビルド設定 |
+| `vite.config.ts` | Viteビルド設定（マルチエントリー） |
 | `.github/workflows/pull_request.yaml` | GitHub Actions CI |
 | `tsconfig.json` | TypeScript設定 |
 | `tsconfig.build.json` | TypeScriptビルド設定 |
 | `index.html` | デモHTMLエントリ |
 | `.gitignore` | Git除外パターン |
 | `src/shims-vue.d.ts` | Vue型定義 |
-| `src/common/types.ts` | 共通型定義（ToolPlugin等） |
-| `src/common/index.ts` | 共通エクスポート |
 | `src/style.css` | 基本スタイル |
 | `demo/main.ts` | デモエントリポイント |
-| `demo/App.vue` | デモ用テストUI（汎用、プラグインを動的に読み込み） |
+| `demo/App.vue` | デモ用テストUI（汎用） |
 | `src/index.ts` | プラグインエントリポイント |
 
 ### 📝 コピーして変更が必要
@@ -442,217 +552,13 @@ yarn dev
 
 | ファイル | 実装内容 |
 |---------|---------|
-| `src/plugin/types.ts` | データ型、引数型 |
-| `src/plugin/tools.ts` | ツール名、ツール定義（TOOL_NAME, TOOL_DEFINITION） |
-| `src/plugin/index.ts` | プラグインロジック |
-| `src/plugin/View.vue` | メインビューコンポーネント |
-| `src/plugin/Preview.vue` | サイドバープレビュー |
-
-> **注意**: `demo/App.vue` は汎用で、どのプラグインでも動作します。プラグイン固有のテスト機能が必要な場合のみカスタマイズしてください（例：ファイルアップロードテスト、APIモック）。
-
----
-
-## 詳細手順
-
-### Step 1: プロジェクト構造の作成
-
-```bash
-# 新規ディレクトリ作成
-mkdir -p ../MulmoChatPlugin{YourName}/src/{common,plugin}
-mkdir -p ../MulmoChatPlugin{YourName}/demo
-```
-
-### Step 2: そのままコピーするファイル
-
-```bash
-DEST="../MulmoChatPlugin{YourName}"
-
-# 共通ファイル（変更不要）
-cp eslint.config.js "$DEST/"
-cp vite.config.ts "$DEST/"
-cp index.html "$DEST/"
-mkdir -p "$DEST/.github/workflows"
-cp .github/workflows/pull_request.yaml "$DEST/.github/workflows/"
-cp src/shims-vue.d.ts "$DEST/src/"
-cp src/common/types.ts "$DEST/src/common/"
-cp src/common/index.ts "$DEST/src/common/"
-cp src/style.css "$DEST/src/"
-cp src/index.ts "$DEST/src/"
-cp demo/main.ts "$DEST/demo/"
-cp demo/App.vue "$DEST/demo/"
-cp tsconfig.json "$DEST/"
-cp tsconfig.build.json "$DEST/"
-cp .gitignore "$DEST/"
-```
-
-### Step 3: 置換が必要なファイル
-
-#### package.json
-
-置換箇所:
-```json
-{
-  "name": "@mulmochat-plugin/{your-plugin-name}",  // ← 変更
-  "description": "{プラグインの説明}"              // ← 変更
-}
-```
-
-#### README.md
-
-`README.npm.md` を `README.md` としてコピーし、プレースホルダを置換:
-```bash
-sed -e 's/{plugin-name}/your-plugin-name/g' \
-    -e 's/{plugin-description}/プラグインの説明/g' \
-    README.npm.md > "$DEST/README.md"
-```
-
-### Step 4: プラグイン固有の実装
-
-#### src/plugin/types.ts
-
-```typescript
-/**
- * {YourPlugin} Types
- */
-
-/** データ型（result.data に格納） */
-export interface {YourPlugin}ToolData {
-  // プラグイン固有のデータ
-}
-
-/** 引数型（LLMから渡される） */
-export interface {YourPlugin}Args {
-  // ツール呼び出し時の引数
-}
-
-/** JSON出力型（result.jsonData に格納、オプション） */
-export interface {YourPlugin}JsonData {
-  // LLMに返すJSON（必要な場合）
-}
-```
-
-#### src/plugin/tools.ts
-
-```typescript
-/**
- * {YourPlugin} Tool Definition
- */
-
-export const TOOL_NAME = "{toolName}";
-
-export const TOOL_DEFINITION = {
-  type: "function" as const,
-  name: TOOL_NAME,
-  description: "{ツールの説明}",
-  parameters: {
-    type: "object" as const,
-    properties: {
-      // パラメータ定義
-    },
-    required: ["..."],
-  },
-};
-```
-
-#### src/plugin/index.ts
-
-```typescript
-import type { ToolPlugin, ToolContext, ToolResult } from "../common";
-import { TOOL_DEFINITION } from "./tools";
-import type { {YourPlugin}ToolData, {YourPlugin}Args } from "./types";
-import View from "./View.vue";
-import Preview from "./Preview.vue";
-
-// プラグイン実行関数
-const execute{YourPlugin} = async (
-  context: ToolContext,
-  args: {YourPlugin}Args,
-): Promise<ToolResult<{YourPlugin}ToolData>> => {
-  // 実装
-  return {
-    message: "Success",
-    data: { /* ... */ },
-    instructions: "...",
-  };
-};
-
-// プラグインエクスポート
-export const plugin: ToolPlugin<{YourPlugin}ToolData, unknown, {YourPlugin}Args> = {
-  toolDefinition: TOOL_DEFINITION,
-  execute: execute{YourPlugin},
-  generatingMessage: "Processing...",
-  isEnabled: () => true,
-  viewComponent: View,
-  previewComponent: Preview,
-  // samples: [...],  // デモ用サンプルデータ（オプション）
-};
-```
-
-#### src/plugin/View.vue（重要パターン）
-
-```vue
-<template>
-  <div class="w-full h-full">
-    <!-- UIを実装 -->
-  </div>
-</template>
-
-<script setup lang="ts">
-import { ref, watch, computed } from "vue";
-import type { ToolResult } from "../common";
-import type { {YourPlugin}ToolData } from "./types";
-import { TOOL_NAME } from "./tools";
-
-const props = defineProps<{
-  selectedResult: ToolResult<{YourPlugin}ToolData>;
-  sendTextMessage: (text?: string) => void;
-}>();
-
-const emit = defineEmits<{
-  updateResult: [result: ToolResult];
-}>();
-
-// ⚠️ 重要: ref + watch パターンを使用（computed だと反映されない）
-const data = ref<{YourPlugin}ToolData | null>(null);
-
-watch(
-  () => props.selectedResult,
-  (newResult) => {
-    if (newResult?.toolName === TOOL_NAME && newResult.data) {
-      data.value = newResult.data as {YourPlugin}ToolData;
-    }
-  },
-  { immediate: true, deep: true },  // ← immediate と deep 必須
-);
-</script>
-```
-
-#### src/plugin/Preview.vue
-
-```vue
-<template>
-  <div class="w-full h-32 bg-gray-200 rounded flex items-center justify-center">
-    <!-- プレビューUI -->
-  </div>
-</template>
-
-<script setup lang="ts">
-import { computed } from "vue";
-import type { ToolResult } from "../common";
-import type { {YourPlugin}ToolData } from "./types";
-
-const props = defineProps<{
-  result: ToolResult<{YourPlugin}ToolData>;
-}>();
-
-const data = computed(() => props.result.data);
-</script>
-```
-
-#### demo/App.vue
-
-Quiz の `demo/App.vue` を参考に、プラグインのテストUIを実装します。
-`jsonData` を使う場合は Quiz パターン、`data` を使う場合は PDF パターンを参照。
+| `src/core/types.ts` | コア型 + プラグイン固有のデータ型 |
+| `src/core/plugin.ts` | ツール定義、execute関数、サンプル |
+| `src/core/index.ts` | コアエクスポート |
+| `src/vue/types.ts` | Vue固有の型 |
+| `src/vue/View.vue` | メインビューコンポーネント |
+| `src/vue/Preview.vue` | サイドバープレビュー |
+| `src/vue/index.ts` | Vueプラグイン組み立て |
 
 ---
 
@@ -693,25 +599,19 @@ rollupOptions: {
 }
 ```
 
-### ⚠️ ファイル構成の確認
-
-`yarn dev` で動作確認するには以下が必須:
-- `index.html` （ルートに配置）
-- `demo/main.ts`
-- `demo/App.vue`
-
 ---
 
 ## チェックリスト
 
 ```
 □ package.json の name, description を変更
-□ src/plugin/types.ts を実装
-□ src/plugin/tools.ts を実装
-□ src/plugin/index.ts を実装
-□ src/plugin/View.vue を実装（ref + watch パターン使用）
-□ src/plugin/Preview.vue を実装
-□ demo/App.vue を実装
+□ src/core/types.ts を実装（プラグイン固有の型を含む）
+□ src/core/plugin.ts を実装（ツール定義、execute、サンプル）
+□ src/core/index.ts を実装（エクスポート）
+□ src/vue/types.ts を実装
+□ src/vue/View.vue を実装（ref + watch パターン使用）
+□ src/vue/Preview.vue を実装
+□ src/vue/index.ts を実装
 □ yarn install 実行
 □ yarn typecheck でエラーなし
 □ yarn lint でエラーなし
@@ -725,6 +625,6 @@ rollupOptions: {
 
 | プラグイン | 特徴 |
 |-----------|------|
-| Quiz | `jsonData` 使用、サンプルデータあり |
+| Quiz | `jsonData` 使用、サンプルデータあり、core/vue構造 |
 | Form | `jsonData` 使用、バリデーションあり |
 | SummarizePdf | `data` 使用、ファイルアップロード、外部ライブラリ(marked)バンドル |
