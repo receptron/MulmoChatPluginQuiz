@@ -9,11 +9,16 @@ A quiz plugin for MulmoChat. Presents multiple choice quizzes to users.
 
 ## Overview
 
-This plugin is a reference implementation of the MulmoChat plugin system. Its simple structure with no server communication makes it an ideal template for creating new plugins.
+This plugin demonstrates the **framework-agnostic core/vue architecture**:
+- **Core**: Framework-agnostic plugin logic (can be used with any UI framework)
+- **Vue**: Vue-specific UI components
+
+### Features
 
 - **Tailwind CSS 4** for styling
 - **TypeScript** for type-safe implementation
 - **ESLint** for static analysis
+- **Framework-agnostic core** for portability
 
 ## Installation
 
@@ -27,14 +32,32 @@ yarn add @mulmochat-plugin/quiz
 
 2. Import in MulmoChat's `src/tools/index.ts`:
 ```typescript
-import QuizPlugin from "@mulmochat-plugin/quiz";
-import "@mulmochat-plugin/quiz/style.css";
+import QuizPlugin from "@mulmochat-plugin/quiz/vue";
 
 // Add to pluginList
 const pluginList = [
   // ... other plugins
   QuizPlugin,
 ];
+```
+
+3. Import styles in `src/main.ts`:
+```typescript
+import "@mulmochat-plugin/quiz/style.css";
+```
+
+## Package Exports
+
+```typescript
+// Default: Core (framework-agnostic)
+import { pluginCore, TOOL_NAME, QuizData } from "@mulmochat-plugin/quiz";
+
+// Vue implementation (for apps with UI)
+import QuizPlugin from "@mulmochat-plugin/quiz/vue";
+import "@mulmochat-plugin/quiz/style.css";
+
+// Named Vue exports
+import { plugin, View, Preview } from "@mulmochat-plugin/quiz/vue";
 ```
 
 ## Development
@@ -76,18 +99,18 @@ yarn lint
 ```
 MulmoChatPluginQuiz/
 ├── src/
-│   ├── index.ts          # Export definitions
+│   ├── index.ts          # Default export (core)
 │   ├── style.css         # Tailwind CSS entry
-│   ├── common/           # Plugin-agnostic shared code
-│   │   ├── index.ts      # Common exports
-│   │   └── types.ts      # ToolPlugin, ToolResult, etc.
-│   └── plugin/           # Quiz-specific implementation
-│       ├── index.ts      # Plugin instance and execute logic
-│       ├── types.ts      # Quiz types and TOOL_DEFINITION
-│       ├── samples.ts    # Sample data for testing
+│   ├── core/             # Framework-agnostic (no Vue/React dependencies)
+│   │   ├── index.ts      # Core exports
+│   │   ├── types.ts      # ToolPluginCore, ToolResult, QuizData, etc.
+│   │   └── plugin.ts     # Execute function, tool definition, samples
+│   └── vue/              # Vue-specific implementation
+│       ├── index.ts      # Vue plugin (combines core + components)
+│       ├── types.ts      # ToolPlugin (extends ToolPluginCore)
 │       ├── View.vue      # Main view component
 │       └── Preview.vue   # Sidebar preview component
-├── demo/                 # Generic plugin demo (works with any plugin)
+├── demo/                 # Generic plugin demo
 │   ├── App.vue           # Dynamic component rendering
 │   └── main.ts
 ├── package.json
@@ -98,9 +121,9 @@ MulmoChatPluginQuiz/
 
 ### Directory Purpose
 
-- **src/common/**: Plugin-agnostic types and utilities. Copy this to your new plugin or import from this package.
-- **src/plugin/**: Quiz-specific implementation. Replace with your plugin logic.
-- **demo/**: Generic demo that works with any ToolPlugin. Just change the import.
+- **src/core/**: Framework-agnostic types and plugin logic. No Vue/React dependencies.
+- **src/vue/**: Vue-specific UI components and the full Vue plugin export.
+- **demo/**: Generic demo that works with any ToolPlugin.
 
 ## Creating a New Plugin
 
@@ -121,35 +144,37 @@ yarn dev
 ### Manual Setup
 
 See [TEMPLATE.md](./TEMPLATE.md) for detailed instructions on:
+- Core/Vue architecture
 - Files that can be copied as-is
-- Files requiring modification (only `package.json`)
 - Plugin-specific implementation requirements
 - Important patterns (View.vue reactivity)
 
-## ToolPlugin Interface
+## Core Types
+
+### ToolPluginCore (Framework-agnostic)
 
 ```typescript
-interface ToolPlugin<T, J, A> {
-  toolDefinition: {
-    type: "function";
-    name: string;
-    description: string;
-    parameters?: {
-      type: "object";
-      properties: Record<string, JsonSchemaProperty>;
-      required: string[];
-    };
-  };
+interface ToolPluginCore<T, J, A> {
+  toolDefinition: ToolDefinition;
   execute: (context: ToolContext, args: A) => Promise<ToolResult<T, J>>;
   generatingMessage: string;
   isEnabled: (startResponse?: StartApiResponse | null) => boolean;
-  viewComponent?: Component;
-  previewComponent?: Component;
   // Optional
   systemPrompt?: string;
-  fileUpload?: FileUploadConfig;
-  config?: ToolPluginConfig;
-  samples?: ToolSample[];  // Sample data for testing
+  inputHandlers?: InputHandler[];
+  configSchema?: PluginConfigSchema;
+  samples?: ToolSample[];
+  backends?: BackendType[];
+}
+```
+
+### ToolPlugin (Vue-specific, extends ToolPluginCore)
+
+```typescript
+interface ToolPlugin<T, J, A> extends ToolPluginCore<T, J, A> {
+  viewComponent?: Component;
+  previewComponent?: Component;
+  config?: ToolPluginConfig;  // Legacy Vue component-based config
 }
 ```
 

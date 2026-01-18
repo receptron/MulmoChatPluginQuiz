@@ -14,16 +14,36 @@ yarn add @mulmochat-plugin/{plugin-name}
 
 ## Usage
 
-```typescript
-import Plugin from "@mulmochat-plugin/{plugin-name}";
-import "@mulmochat-plugin/{plugin-name}/style.css";
+### Vue Implementation (for MulmoChat)
 
-// Add to pluginList
+```typescript
+// In src/tools/index.ts
+import Plugin from "@mulmochat-plugin/{plugin-name}/vue";
+
 const pluginList = [
   // ... other plugins
   Plugin,
 ];
+
+// In src/main.ts
+import "@mulmochat-plugin/{plugin-name}/style.css";
 ```
+
+### Core Only (Framework-agnostic)
+
+```typescript
+import { pluginCore, TOOL_NAME } from "@mulmochat-plugin/{plugin-name}";
+// or
+import pluginCore from "@mulmochat-plugin/{plugin-name}";
+```
+
+## Package Exports
+
+| Export | Description |
+|--------|-------------|
+| `@mulmochat-plugin/{plugin-name}` | Core (framework-agnostic) |
+| `@mulmochat-plugin/{plugin-name}/vue` | Vue implementation with UI components |
+| `@mulmochat-plugin/{plugin-name}/style.css` | Tailwind CSS styles |
 
 ## Development
 
