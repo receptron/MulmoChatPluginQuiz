@@ -39,7 +39,8 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
-import type { ToolResult, QuizData } from "../core/types";
+import type { ToolResult } from "gui-chat-protocol";
+import type { QuizData } from "../core/types";
 
 const props = defineProps<{
   result: ToolResult;

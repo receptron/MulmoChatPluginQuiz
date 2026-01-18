@@ -8,7 +8,8 @@
 // Import styles for Vue components
 import "../style.css";
 
-import type { ToolPlugin, QuizData, QuizArgs } from "./types";
+import type { ToolPlugin } from "gui-chat-protocol/vue";
+import type { QuizData, QuizArgs } from "../core/types";
 import { pluginCore } from "../core/plugin";
 import View from "./View.vue";
 import Preview from "./Preview.vue";
@@ -26,35 +27,13 @@ export const plugin: ToolPlugin<never, QuizData, QuizArgs> = {
   previewComponent: Preview,
 };
 
-// Re-export types
-export type { ToolPlugin, ToolPluginConfig } from "./types";
+// Quiz-specific types
+export type { QuizQuestion, QuizData, QuizArgs } from "../core/types";
 
-// Re-export core types for convenience
-export type {
-  BackendType,
-  ToolContextApp,
-  ToolContext,
-  ToolResult,
-  ToolResultComplete,
-  JsonSchemaProperty,
-  ToolDefinition,
-  StartApiResponse,
-  ToolSample,
-  InputHandler,
-  FileUploadConfig,
-  ConfigValue,
-  ConfigFieldSchema,
-  PluginConfigSchema,
-  ViewComponentProps,
-  PreviewComponentProps,
-  ToolPluginCore,
-  QuizQuestion,
-  QuizData,
-  QuizArgs,
-} from "./types";
-
-// Re-export core plugin utilities
-export { TOOL_NAME, TOOL_DEFINITION, SAMPLES, executeQuiz, pluginCore } from "../core/plugin";
+// Core plugin utilities
+export { pluginCore, executeQuiz } from "../core/plugin";
+export { TOOL_NAME, TOOL_DEFINITION } from "../core/definition";
+export { SAMPLES } from "../core/samples";
 
 // Export components for direct use
 export { View, Preview };

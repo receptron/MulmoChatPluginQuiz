@@ -5,19 +5,10 @@
  * Can be used by any framework (Vue, React, etc.)
  */
 
-import type {
-  ToolPluginCore,
-  ToolContext,
-  ToolResult,
-  QuizData,
-  QuizArgs,
-} from "./types";
+import type { ToolPluginCore, ToolContext, ToolResult } from "gui-chat-protocol";
+import type { QuizData, QuizArgs } from "./types";
 import { TOOL_DEFINITION } from "./definition";
 import { SAMPLES } from "./samples";
-
-// Re-export for convenience
-export { TOOL_NAME, TOOL_DEFINITION } from "./definition";
-export { SAMPLES } from "./samples";
 
 // ============================================================================
 // Execute Function

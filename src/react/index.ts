@@ -8,7 +8,8 @@
 // Import styles for React components
 import "../style.css";
 
-import type { ToolPlugin, QuizData, QuizArgs } from "./types";
+import type { ToolPluginReact } from "gui-chat-protocol/react";
+import type { QuizData, QuizArgs } from "../core/types";
 import { pluginCore } from "../core/plugin";
 import { View } from "./View";
 import { Preview } from "./Preview";
@@ -20,41 +21,19 @@ import { Preview } from "./Preview";
 /**
  * Quiz plugin instance with React components
  */
-export const plugin: ToolPlugin<never, QuizData, QuizArgs> = {
+export const plugin: ToolPluginReact<never, QuizData, QuizArgs> = {
   ...pluginCore,
-  viewComponent: View,
-  previewComponent: Preview,
+  ViewComponent: View,
+  PreviewComponent: Preview,
 };
 
-// Re-export types
-export type { ToolPlugin } from "./types";
+// Quiz-specific types
+export type { QuizQuestion, QuizData, QuizArgs } from "../core/types";
 
-// Re-export core types for convenience
-export type {
-  BackendType,
-  ToolContextApp,
-  ToolContext,
-  ToolResult,
-  ToolResultComplete,
-  JsonSchemaProperty,
-  ToolDefinition,
-  StartApiResponse,
-  ToolSample,
-  InputHandler,
-  FileUploadConfig,
-  ConfigValue,
-  ConfigFieldSchema,
-  PluginConfigSchema,
-  ViewComponentProps,
-  PreviewComponentProps,
-  ToolPluginCore,
-  QuizQuestion,
-  QuizData,
-  QuizArgs,
-} from "./types";
-
-// Re-export core plugin utilities
-export { TOOL_NAME, TOOL_DEFINITION, SAMPLES, executeQuiz, pluginCore } from "../core/plugin";
+// Core plugin utilities
+export { pluginCore, executeQuiz } from "../core/plugin";
+export { TOOL_NAME, TOOL_DEFINITION } from "../core/definition";
+export { SAMPLES } from "../core/samples";
 
 // Export components for direct use
 export { View, Preview };
