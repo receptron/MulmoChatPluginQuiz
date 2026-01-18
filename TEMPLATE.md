@@ -21,7 +21,9 @@ The plugin is now organized with a **framework-agnostic core** and **framework-s
 src/
 ├── core/           # Framework-agnostic (no Vue/React dependencies)
 │   ├── types.ts    # Core types (ToolPluginCore, ToolResult, etc.)
-│   ├── plugin.ts   # Plugin logic (execute function, tool definition)
+│   ├── definition.ts # Tool definition (schema)
+│   ├── samples.ts  # Sample data (optional)
+│   ├── plugin.ts   # Plugin logic (execute function)
 │   └── index.ts    # Core exports
 ├── vue/            # Vue-specific implementation
 │   ├── types.ts    # Vue types (ToolPlugin extends ToolPluginCore)
@@ -121,7 +123,9 @@ yarn dev
 | File | What to Implement |
 |------|-------------------|
 | `src/core/types.ts` | Core types + plugin-specific data types |
-| `src/core/plugin.ts` | Tool definition, execute function, samples |
+| `src/core/definition.ts` | Tool name and definition (schema) |
+| `src/core/samples.ts` | Sample data (optional) |
+| `src/core/plugin.ts` | Execute function |
 | `src/core/index.ts` | Core exports |
 | `src/vue/types.ts` | Vue-specific types |
 | `src/vue/View.vue` | Main view component (Vue) |
@@ -192,24 +196,12 @@ export interface YourPluginArgs {
 }
 ```
 
-### src/core/plugin.ts
+### src/core/definition.ts
 
-Contains the plugin logic:
+Contains the tool definition (schema):
 
 ```typescript
-import type {
-  ToolPluginCore,
-  ToolContext,
-  ToolResult,
-  ToolDefinition,
-  ToolSample,
-  YourPluginData,
-  YourPluginArgs,
-} from "./types";
-
-// ============================================================================
-// Tool Definition
-// ============================================================================
+import type { ToolDefinition } from "./types";
 
 export const TOOL_NAME = "yourToolName";
 
@@ -225,10 +217,14 @@ export const TOOL_DEFINITION: ToolDefinition = {
     required: ["..."],
   },
 };
+```
 
-// ============================================================================
-// Sample Data
-// ============================================================================
+### src/core/samples.ts (Optional)
+
+Contains sample data for demo/testing:
+
+```typescript
+import type { ToolSample } from "./types";
 
 export const SAMPLES: ToolSample[] = [
   {
@@ -236,6 +232,26 @@ export const SAMPLES: ToolSample[] = [
     args: { /* sample arguments */ },
   },
 ];
+```
+
+### src/core/plugin.ts
+
+Contains the plugin logic:
+
+```typescript
+import type {
+  ToolPluginCore,
+  ToolContext,
+  ToolResult,
+  YourPluginData,
+  YourPluginArgs,
+} from "./types";
+import { TOOL_DEFINITION } from "./definition";
+import { SAMPLES } from "./samples";
+
+// Re-export for convenience
+export { TOOL_NAME, TOOL_DEFINITION } from "./definition";
+export { SAMPLES } from "./samples";
 
 // ============================================================================
 // Execute Function
@@ -483,7 +499,9 @@ Required for `yarn dev` to work:
 src/
 ├── core/           # フレームワーク非依存（Vue/React依存なし）
 │   ├── types.ts    # コア型定義（ToolPluginCore, ToolResult等）
-│   ├── plugin.ts   # プラグインロジック（execute関数、ツール定義）
+│   ├── definition.ts # ツール定義（スキーマ）
+│   ├── samples.ts  # サンプルデータ（オプション）
+│   ├── plugin.ts   # プラグインロジック（execute関数）
 │   └── index.ts    # コアエクスポート
 ├── vue/            # Vue固有の実装
 │   ├── types.ts    # Vue型定義（ToolPlugin extends ToolPluginCore）
@@ -583,7 +601,9 @@ yarn dev
 | ファイル | 実装内容 |
 |---------|---------|
 | `src/core/types.ts` | コア型 + プラグイン固有のデータ型 |
-| `src/core/plugin.ts` | ツール定義、execute関数、サンプル |
+| `src/core/definition.ts` | ツール名と定義（スキーマ） |
+| `src/core/samples.ts` | サンプルデータ（オプション） |
+| `src/core/plugin.ts` | execute関数 |
 | `src/core/index.ts` | コアエクスポート |
 | `src/vue/types.ts` | Vue固有の型 |
 | `src/vue/View.vue` | メインビューコンポーネント（Vue） |
@@ -640,7 +660,9 @@ rollupOptions: {
 ```
 □ package.json の name, description を変更
 □ src/core/types.ts を実装（プラグイン固有の型を含む）
-□ src/core/plugin.ts を実装（ツール定義、execute、サンプル）
+□ src/core/definition.ts を実装（ツール名と定義）
+□ src/core/samples.ts を実装（サンプルデータ、オプション）
+□ src/core/plugin.ts を実装（execute関数）
 □ src/core/index.ts を実装（エクスポート）
 □ src/vue/types.ts を実装
 □ src/vue/View.vue を実装（ref + watch パターン使用）
