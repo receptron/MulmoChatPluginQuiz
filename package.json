@@ -1,6 +1,6 @@
 {
   "name": "@mulmochat-plugin/quiz",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "Quiz plugin for MulmoChat",
   "type": "module",
   "main": "./dist/index.cjs",
