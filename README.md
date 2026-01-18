@@ -118,18 +118,16 @@ MulmoChatPluginQuiz/
 │   ├── style.css         # Tailwind CSS entry
 │   ├── core/             # Framework-agnostic (no Vue/React dependencies)
 │   │   ├── index.ts      # Core exports
-│   │   ├── types.ts      # ToolPluginCore, ToolResult, QuizData, etc.
+│   │   ├── types.ts      # Quiz-specific types (QuizData, QuizArgs)
 │   │   ├── definition.ts # Tool definition (schema)
 │   │   ├── samples.ts    # Sample data
 │   │   └── plugin.ts     # Execute function
 │   ├── vue/              # Vue-specific implementation
 │   │   ├── index.ts      # Vue plugin (combines core + components)
-│   │   ├── types.ts      # ToolPlugin (extends ToolPluginCore)
 │   │   ├── View.vue      # Main view component
 │   │   └── Preview.vue   # Sidebar preview component
 │   └── react/            # React-specific implementation
 │       ├── index.ts      # React plugin (combines core + components)
-│       ├── types.ts      # ToolPlugin (extends ToolPluginCore)
 │       ├── View.tsx      # Main view component
 │       └── Preview.tsx   # Sidebar preview component
 ├── demo/                 # Vue demo
