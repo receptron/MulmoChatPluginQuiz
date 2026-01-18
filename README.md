@@ -119,7 +119,9 @@ MulmoChatPluginQuiz/
 │   ├── core/             # Framework-agnostic (no Vue/React dependencies)
 │   │   ├── index.ts      # Core exports
 │   │   ├── types.ts      # ToolPluginCore, ToolResult, QuizData, etc.
-│   │   └── plugin.ts     # Execute function, tool definition, samples
+│   │   ├── definition.ts # Tool definition (schema)
+│   │   ├── samples.ts    # Sample data
+│   │   └── plugin.ts     # Execute function
 │   ├── vue/              # Vue-specific implementation
 │   │   ├── index.ts      # Vue plugin (combines core + components)
 │   │   ├── types.ts      # ToolPlugin (extends ToolPluginCore)

@@ -9,129 +9,15 @@ import type {
   ToolPluginCore,
   ToolContext,
   ToolResult,
-  ToolDefinition,
-  ToolSample,
   QuizData,
   QuizArgs,
 } from "./types";
+import { TOOL_DEFINITION } from "./definition";
+import { SAMPLES } from "./samples";
 
-// ============================================================================
-// Tool Definition
-// ============================================================================
-
-export const TOOL_NAME = "putQuestions";
-
-export const TOOL_DEFINITION: ToolDefinition = {
-  type: "function",
-  name: TOOL_NAME,
-  description:
-    "Present a set of multiple choice questions to test the user's knowledge or abilities. Each question should have 2-6 answer choices.",
-  parameters: {
-    type: "object",
-    properties: {
-      title: {
-        type: "string",
-        description:
-          "Optional title for the quiz (e.g., 'JavaScript Basics Quiz')",
-      },
-      questions: {
-        type: "array",
-        description: "Array of multiple choice questions",
-        items: {
-          type: "object",
-          properties: {
-            question: {
-              type: "string",
-              description: "The question text",
-            },
-            choices: {
-              type: "array",
-              description: "Array of answer choices (2-6 choices)",
-              items: {
-                type: "string",
-              },
-              minItems: 2,
-              maxItems: 6,
-            },
-            correctAnswer: {
-              type: "number",
-              description:
-                "Optional: The index of the correct answer (0-based). Include this if you want to track correct answers.",
-            },
-          },
-          required: ["question", "choices"],
-        },
-        minItems: 1,
-      },
-    },
-    required: ["questions"],
-  },
-};
-
-// ============================================================================
-// Sample Data
-// ============================================================================
-
-export const SAMPLES: ToolSample[] = [
-  {
-    name: "JavaScript Quiz",
-    args: {
-      title: "JavaScript Basics",
-      questions: [
-        {
-          question: "What does 'const' do in JavaScript?",
-          choices: [
-            "Declares a constant variable",
-            "Declares a mutable variable",
-            "Creates a function",
-            "Imports a module",
-          ],
-          correctAnswer: 0,
-        },
-        {
-          question: "Which method adds an element to the end of an array?",
-          choices: ["pop()", "shift()", "push()", "unshift()"],
-          correctAnswer: 2,
-        },
-        {
-          question: "What is the output of: typeof null?",
-          choices: ['"null"', '"undefined"', '"object"', '"boolean"'],
-          correctAnswer: 2,
-        },
-      ],
-    },
-  },
-  {
-    name: "World Capitals",
-    args: {
-      title: "World Capitals Quiz",
-      questions: [
-        {
-          question: "What is the capital of Japan?",
-          choices: ["Osaka", "Kyoto", "Tokyo", "Hiroshima"],
-          correctAnswer: 2,
-        },
-        {
-          question: "What is the capital of Australia?",
-          choices: ["Sydney", "Melbourne", "Canberra", "Brisbane"],
-          correctAnswer: 2,
-        },
-      ],
-    },
-  },
-  {
-    name: "Simple Yes/No",
-    args: {
-      questions: [
-        {
-          question: "Is the Earth round?",
-          choices: ["Yes", "No"],
-          correctAnswer: 0,
-        },
-      ],
-    },
-  },
-];
+// Re-export for convenience
+export { TOOL_NAME, TOOL_DEFINITION } from "./definition";
+export { SAMPLES } from "./samples";
 
 // ============================================================================
 // Execute Function
