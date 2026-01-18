@@ -9,9 +9,12 @@ A quiz plugin for MulmoChat. Presents multiple choice quizzes to users.
 
 ## Overview
 
-This plugin demonstrates the **framework-agnostic core/vue architecture**:
+This plugin is the reference implementation of the MulmoChat plugin system. With its simple structure requiring no server communication, it can be used as a template for creating new plugins.
+
+It demonstrates the **framework-agnostic core architecture** with **Vue and React implementations**:
 - **Core**: Framework-agnostic plugin logic (can be used with any UI framework)
 - **Vue**: Vue-specific UI components
+- **React**: React-specific UI components
 
 ### Features
 
@@ -19,6 +22,7 @@ This plugin demonstrates the **framework-agnostic core/vue architecture**:
 - **TypeScript** for type-safe implementation
 - **ESLint** for static analysis
 - **Framework-agnostic core** for portability
+- **Multi-framework support** (Vue and React)
 
 ## Installation
 
@@ -52,12 +56,19 @@ import "@mulmochat-plugin/quiz/style.css";
 // Default: Core (framework-agnostic)
 import { pluginCore, TOOL_NAME, QuizData } from "@mulmochat-plugin/quiz";
 
-// Vue implementation (for apps with UI)
+// Vue implementation
 import QuizPlugin from "@mulmochat-plugin/quiz/vue";
 import "@mulmochat-plugin/quiz/style.css";
 
 // Named Vue exports
 import { plugin, View, Preview } from "@mulmochat-plugin/quiz/vue";
+
+// React implementation
+import QuizPlugin from "@mulmochat-plugin/quiz/react";
+import "@mulmochat-plugin/quiz/style.css";
+
+// Named React exports
+import { plugin, View, Preview } from "@mulmochat-plugin/quiz/react";
 ```
 
 ## Development
@@ -71,7 +82,11 @@ yarn install
 ### Development Server
 
 ```bash
+# Vue demo
 yarn dev
+
+# React demo
+yarn dev:react
 ```
 
 Demo page will be available at http://localhost:5173/
@@ -105,17 +120,29 @@ MulmoChatPluginQuiz/
 │   │   ├── index.ts      # Core exports
 │   │   ├── types.ts      # ToolPluginCore, ToolResult, QuizData, etc.
 │   │   └── plugin.ts     # Execute function, tool definition, samples
-│   └── vue/              # Vue-specific implementation
-│       ├── index.ts      # Vue plugin (combines core + components)
+│   ├── vue/              # Vue-specific implementation
+│   │   ├── index.ts      # Vue plugin (combines core + components)
+│   │   ├── types.ts      # ToolPlugin (extends ToolPluginCore)
+│   │   ├── View.vue      # Main view component
+│   │   └── Preview.vue   # Sidebar preview component
+│   └── react/            # React-specific implementation
+│       ├── index.ts      # React plugin (combines core + components)
 │       ├── types.ts      # ToolPlugin (extends ToolPluginCore)
-│       ├── View.vue      # Main view component
-│       └── Preview.vue   # Sidebar preview component
-├── demo/                 # Generic plugin demo
-│   ├── App.vue           # Dynamic component rendering
+│       ├── View.tsx      # Main view component
+│       └── Preview.tsx   # Sidebar preview component
+├── demo/                 # Vue demo
+│   ├── App.vue
 │   └── main.ts
+├── demo-react/           # React demo
+│   ├── App.tsx
+│   ├── main.tsx
+│   ├── style.css
+│   ├── index.html
+│   └── vite.config.ts
 ├── package.json
 ├── vite.config.ts
 ├── tsconfig.json
+├── tsconfig.react.json   # React-specific TypeScript config
 └── eslint.config.js
 ```
 
@@ -123,7 +150,9 @@ MulmoChatPluginQuiz/
 
 - **src/core/**: Framework-agnostic types and plugin logic. No Vue/React dependencies.
 - **src/vue/**: Vue-specific UI components and the full Vue plugin export.
-- **demo/**: Generic demo that works with any ToolPlugin.
+- **src/react/**: React-specific UI components and the full React plugin export.
+- **demo/**: Vue demo.
+- **demo-react/**: React demo.
 
 ## Creating a New Plugin
 
@@ -172,9 +201,18 @@ interface ToolPluginCore<T, J, A> {
 
 ```typescript
 interface ToolPlugin<T, J, A> extends ToolPluginCore<T, J, A> {
-  viewComponent?: Component;
-  previewComponent?: Component;
-  config?: ToolPluginConfig;  // Legacy Vue component-based config
+  viewComponent?: Component;      // Vue Component
+  previewComponent?: Component;   // Vue Component
+  config?: ToolPluginConfig;      // Legacy Vue component-based config
+}
+```
+
+### ToolPlugin (React-specific, extends ToolPluginCore)
+
+```typescript
+interface ToolPlugin<T, J, A> extends ToolPluginCore<T, J, A> {
+  viewComponent?: ComponentType;    // React ComponentType
+  previewComponent?: ComponentType; // React ComponentType
 }
 ```
 
