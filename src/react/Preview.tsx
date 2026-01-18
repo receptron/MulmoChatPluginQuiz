@@ -2,11 +2,10 @@
  * Quiz Preview Component (React)
  */
 
-import type { ToolResult, QuizData } from "../core/types";
+import type { PreviewComponentProps } from "gui-chat-protocol";
+import type { QuizData } from "../core/types";
 
-interface PreviewProps {
-  result: ToolResult;
-}
+type PreviewProps = PreviewComponentProps<never, QuizData>;
 
 export function Preview({ result }: PreviewProps) {
   const quizData = result.jsonData as QuizData | null;

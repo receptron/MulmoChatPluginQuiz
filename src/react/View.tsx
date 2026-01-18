@@ -3,14 +3,11 @@
  */
 
 import { useState, useEffect, useCallback } from "react";
-import type { ToolResult, QuizData } from "../core/types";
-import { TOOL_NAME } from "../core/plugin";
+import type { ViewComponentProps } from "gui-chat-protocol";
+import type { QuizData } from "../core/types";
+import { TOOL_NAME } from "../core/definition";
 
-interface ViewProps {
-  selectedResult: ToolResult;
-  sendTextMessage: (text?: string) => void;
-  onUpdateResult?: (result: ToolResult) => void;
-}
+type ViewProps = ViewComponentProps<never, QuizData>;
 
 export function View({ selectedResult, sendTextMessage, onUpdateResult }: ViewProps) {
   const [quizData, setQuizData] = useState<QuizData | null>(null);
@@ -33,14 +30,13 @@ export function View({ selectedResult, sendTextMessage, onUpdateResult }: ViewPr
   const updateAnswers = useCallback(
     (newAnswers: (number | null)[]) => {
       setUserAnswers(newAnswers);
-      if (onUpdateResult && selectedResult) {
+      if (onUpdateResult) {
         onUpdateResult({
-          ...selectedResult,
           viewState: { userAnswers: newAnswers },
         });
       }
     },
-    [onUpdateResult, selectedResult]
+    [onUpdateResult]
   );
 
   const handleAnswerChange = (qIndex: number, cIndex: number) => {

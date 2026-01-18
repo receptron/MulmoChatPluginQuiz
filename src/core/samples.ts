@@ -2,7 +2,7 @@
  * Quiz Sample Data
  */
 
-import type { ToolSample } from "./types";
+import type { ToolSample } from "gui-chat-protocol";
 
 export const SAMPLES: ToolSample[] = [
   {

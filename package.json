@@ -82,5 +82,8 @@
     "react",
     "vue"
   ],
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "gui-chat-protocol": "^0.0.1"
+  }
 }

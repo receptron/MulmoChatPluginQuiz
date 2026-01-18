@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { plugin, View, Preview } from "../src/react";
-import type { ToolResult, ToolSample } from "../src/react";
+import type { ToolResult, ToolSample } from "gui-chat-protocol/react";
 
 function App() {
   const pluginName = plugin.toolDefinition.name;
