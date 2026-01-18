@@ -1,4 +1,4 @@
-# MulmoChat Plugin
+# @mulmochat-plugin/{plugin-name}
 
 A plugin for [MulmoChat](https://github.com/receptron/MulmoChat) - a multi-modal voice chat application with OpenAI's GPT-4 Realtime API.
 
@@ -29,6 +29,16 @@ const pluginList = [
 import "@mulmochat-plugin/{plugin-name}/style.css";
 ```
 
+### React Implementation
+
+```typescript
+import Plugin from "@mulmochat-plugin/{plugin-name}/react";
+import "@mulmochat-plugin/{plugin-name}/style.css";
+
+// Named exports
+import { plugin, View, Preview } from "@mulmochat-plugin/{plugin-name}/react";
+```
+
 ### Core Only (Framework-agnostic)
 
 ```typescript
@@ -43,6 +53,7 @@ import pluginCore from "@mulmochat-plugin/{plugin-name}";
 |--------|-------------|
 | `@mulmochat-plugin/{plugin-name}` | Core (framework-agnostic) |
 | `@mulmochat-plugin/{plugin-name}/vue` | Vue implementation with UI components |
+| `@mulmochat-plugin/{plugin-name}/react` | React implementation with UI components |
 | `@mulmochat-plugin/{plugin-name}/style.css` | Tailwind CSS styles |
 
 ## Development
@@ -51,8 +62,11 @@ import pluginCore from "@mulmochat-plugin/{plugin-name}";
 # Install dependencies
 yarn install
 
-# Start dev server (http://localhost:5173/)
+# Start dev server - Vue (http://localhost:5173/)
 yarn dev
+
+# Start dev server - React (http://localhost:5173/)
+yarn dev:react
 
 # Build
 yarn build

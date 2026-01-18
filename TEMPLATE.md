@@ -13,7 +13,7 @@ This guide explains how to create a new plugin using MulmoChatPluginQuiz as a te
 3. Run yarn install && yarn dev to verify
 ```
 
-## New Architecture: Core/Vue Structure
+## New Architecture: Core/Vue/React Structure
 
 The plugin is now organized with a **framework-agnostic core** and **framework-specific UI layers**:
 
@@ -28,6 +28,11 @@ src/
 │   ├── View.vue    # Main view component
 │   ├── Preview.vue # Sidebar preview component
 │   └── index.ts    # Vue plugin (combines core + components)
+├── react/          # React-specific implementation
+│   ├── types.ts    # React types (ToolPlugin extends ToolPluginCore)
+│   ├── View.tsx    # Main view component
+│   ├── Preview.tsx # Sidebar preview component
+│   └── index.ts    # React plugin (combines core + components)
 ├── index.ts        # Default export (core, framework-agnostic)
 └── style.css       # Styles
 ```
@@ -44,6 +49,13 @@ import "@mulmochat-plugin/quiz/style.css";
 
 // Named Vue exports
 import { plugin, View, Preview } from "@mulmochat-plugin/quiz/vue";
+
+// React implementation (for React apps)
+import QuizPlugin from "@mulmochat-plugin/quiz/react";
+import "@mulmochat-plugin/quiz/style.css";
+
+// Named React exports
+import { plugin, View, Preview } from "@mulmochat-plugin/quiz/react";
 ```
 
 ---
@@ -112,9 +124,13 @@ yarn dev
 | `src/core/plugin.ts` | Tool definition, execute function, samples |
 | `src/core/index.ts` | Core exports |
 | `src/vue/types.ts` | Vue-specific types |
-| `src/vue/View.vue` | Main view component |
-| `src/vue/Preview.vue` | Sidebar preview |
+| `src/vue/View.vue` | Main view component (Vue) |
+| `src/vue/Preview.vue` | Sidebar preview (Vue) |
 | `src/vue/index.ts` | Vue plugin assembly |
+| `src/react/types.ts` | React-specific types (optional) |
+| `src/react/View.tsx` | Main view component (React, optional) |
+| `src/react/Preview.tsx` | Sidebar preview (React, optional) |
+| `src/react/index.ts` | React plugin assembly (optional) |
 
 ---
 
@@ -459,7 +475,7 @@ Required for `yarn dev` to work:
 3. yarn install && yarn dev で動作確認
 ```
 
-## 新アーキテクチャ: Core/Vue 構造
+## 新アーキテクチャ: Core/Vue/React 構造
 
 プラグインは**フレームワーク非依存のcore**と**フレームワーク固有のUI層**で構成されます:
 
@@ -474,6 +490,11 @@ src/
 │   ├── View.vue    # メインビューコンポーネント
 │   ├── Preview.vue # サイドバープレビュー
 │   └── index.ts    # Vueプラグイン（core + コンポーネント）
+├── react/          # React固有の実装
+│   ├── types.ts    # React型定義（ToolPlugin extends ToolPluginCore）
+│   ├── View.tsx    # メインビューコンポーネント
+│   ├── Preview.tsx # サイドバープレビュー
+│   └── index.ts    # Reactプラグイン（core + コンポーネント）
 ├── index.ts        # デフォルトエクスポート（core、フレームワーク非依存）
 └── style.css       # スタイル
 ```
@@ -490,6 +511,13 @@ import "@mulmochat-plugin/quiz/style.css";
 
 // Vue名前付きエクスポート
 import { plugin, View, Preview } from "@mulmochat-plugin/quiz/vue";
+
+// React実装（Reactアプリ用）
+import QuizPlugin from "@mulmochat-plugin/quiz/react";
+import "@mulmochat-plugin/quiz/style.css";
+
+// React名前付きエクスポート
+import { plugin, View, Preview } from "@mulmochat-plugin/quiz/react";
 ```
 
 ---
@@ -558,9 +586,13 @@ yarn dev
 | `src/core/plugin.ts` | ツール定義、execute関数、サンプル |
 | `src/core/index.ts` | コアエクスポート |
 | `src/vue/types.ts` | Vue固有の型 |
-| `src/vue/View.vue` | メインビューコンポーネント |
-| `src/vue/Preview.vue` | サイドバープレビュー |
+| `src/vue/View.vue` | メインビューコンポーネント（Vue） |
+| `src/vue/Preview.vue` | サイドバープレビュー（Vue） |
 | `src/vue/index.ts` | Vueプラグイン組み立て |
+| `src/react/types.ts` | React固有の型（オプション） |
+| `src/react/View.tsx` | メインビューコンポーネント（React、オプション） |
+| `src/react/Preview.tsx` | サイドバープレビュー（React、オプション） |
+| `src/react/index.ts` | Reactプラグイン組み立て（オプション） |
 
 ---
 
@@ -614,10 +646,15 @@ rollupOptions: {
 □ src/vue/View.vue を実装（ref + watch パターン使用）
 □ src/vue/Preview.vue を実装
 □ src/vue/index.ts を実装
+□ （オプション）src/react/types.ts を実装
+□ （オプション）src/react/View.tsx を実装
+□ （オプション）src/react/Preview.tsx を実装
+□ （オプション）src/react/index.ts を実装
 □ yarn install 実行
 □ yarn typecheck でエラーなし
 □ yarn lint でエラーなし
-□ yarn dev でブラウザ確認
+□ yarn dev でブラウザ確認（Vue）
+□ yarn dev:react でブラウザ確認（React、オプション）
 □ yarn build 成功
 ```
 
