@@ -65,8 +65,8 @@
 
 <script setup lang="ts">
 import { ref, watch, computed } from "vue";
-import type { ToolResult } from "../common";
-import type { QuizData } from "./types";
+import type { ToolResult, QuizData } from "../core/types";
+import { TOOL_NAME } from "../core/plugin";
 
 const props = defineProps<{
   selectedResult: ToolResult;
@@ -83,7 +83,7 @@ const userAnswers = ref<(number | null)[]>([]);
 watch(
   () => props.selectedResult,
   (newResult) => {
-    if (newResult?.toolName === "putQuestions" && newResult.jsonData) {
+    if (newResult?.toolName === TOOL_NAME && newResult.jsonData) {
       quizData.value = newResult.jsonData as QuizData;
       // Restore user answers from viewState or initialize new array
       if (newResult.viewState?.userAnswers) {

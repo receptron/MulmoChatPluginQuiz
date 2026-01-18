@@ -39,8 +39,7 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
-import type { ToolResult } from "../common";
-import type { QuizData } from "./types";
+import type { ToolResult, QuizData } from "../core/types";
 
 const props = defineProps<{
   result: ToolResult;
