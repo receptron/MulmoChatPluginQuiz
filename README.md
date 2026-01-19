@@ -1,5 +1,7 @@
 # MulmoChat Plugin Quiz
 
+[![npm version](https://badge.fury.io/js/%40mulmochat-plugin%2Fquiz.svg)](https://www.npmjs.com/package/@mulmochat-plugin/quiz)
+
 > **📦 Template Repository**
 > This is the reference implementation for [MulmoChat](https://github.com/receptron/MulmoChat) plugins.
 > Use this repository as a template to create your own plugins.
@@ -215,6 +217,14 @@ interface ToolPlugin<T, J, A> extends ToolPluginCore<T, J, A> {
   previewComponent?: ComponentType; // React ComponentType
 }
 ```
+
+## Test Prompts
+
+Try these prompts to test the plugin:
+
+1. "Give me a 3-question quiz about world geography"
+2. "Quiz me on basic JavaScript concepts"
+3. "Create a history quiz about World War II"
 
 ## License
 

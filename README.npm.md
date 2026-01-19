@@ -1,5 +1,7 @@
 # @mulmochat-plugin/{plugin-name}
 
+[![npm version](https://badge.fury.io/js/%40mulmochat-plugin%2F{plugin-name}.svg)](https://www.npmjs.com/package/@mulmochat-plugin/{plugin-name})
+
 A plugin for [MulmoChat](https://github.com/receptron/MulmoChat) - a multi-modal voice chat application with OpenAI's GPT-4 Realtime API.
 
 ## What this plugin does
@@ -77,6 +79,14 @@ yarn typecheck
 # Lint
 yarn lint
 ```
+
+## Test Prompts
+
+Try these prompts to test the plugin:
+
+1. "{test-prompt-1}"
+2. "{test-prompt-2}"
+3. "{test-prompt-3}"
 
 ## License
 

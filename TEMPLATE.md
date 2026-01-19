@@ -143,7 +143,7 @@ yarn dev
 | File | Copy As | What to Modify |
 |------|---------|----------------|
 | `package.json` | `package.json` | Package name, description |
-| `README.npm.md` | `README.md` | Replace `{plugin-name}` and `{plugin-description}` |
+| `README.npm.md` | `README.md` | Replace `{plugin-name}`, `{plugin-description}`, and `{test-prompt-1/2/3}` |
 
 ### 🔧 Plugin-Specific Implementation Required
 
@@ -426,6 +426,7 @@ Required for `yarn dev` to work:
 ```
 □ Added gui-chat-protocol dependency in package.json
 □ Changed name, description in package.json
+□ Updated README.md with plugin info and 3 test prompts
 □ Implemented src/core/types.ts (plugin-specific types only)
 □ Implemented src/core/definition.ts (tool name and schema)
 □ Implemented src/core/samples.ts (optional)
@@ -600,7 +601,7 @@ yarn dev
 | ファイル | コピー先 | 変更内容 |
 |---------|---------|---------|
 | `package.json` | `package.json` | パッケージ名、説明 |
-| `README.npm.md` | `README.md` | `{plugin-name}` と `{plugin-description}` を置換 |
+| `README.npm.md` | `README.md` | `{plugin-name}`, `{plugin-description}`, `{test-prompt-1/2/3}` を置換 |
 
 ### 🔧 プラグイン固有の実装が必要
 
@@ -664,6 +665,7 @@ rollupOptions: {
 ```
 □ package.json に gui-chat-protocol 依存を追加
 □ package.json の name, description を変更
+□ README.md にプラグイン情報と3つのテストプロンプトを追加
 □ src/core/types.ts を実装（プラグイン固有の型のみ）
 □ src/core/definition.ts を実装（ツール名と定義）
 □ src/core/samples.ts を実装（サンプルデータ、オプション）
