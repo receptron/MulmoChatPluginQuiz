@@ -26,6 +26,12 @@ It demonstrates the **framework-agnostic core architecture** with **Vue and Reac
 - **Framework-agnostic core** for portability
 - **Multi-framework support** (Vue and React)
 
+> **⚠️ Important: No Arbitrary Values**
+>
+> Do NOT use Tailwind's arbitrary values (e.g., `bg-[#1a1a2e]`, `w-[137px]`) in plugin code.
+> MulmoChat uses `@source` directive to scan plugins, which only supports standard Tailwind classes.
+> Use standard classes like `bg-slate-900` instead.
+
 ## Installation
 
 ### Adding to MulmoChat
