@@ -46,5 +46,6 @@ const props = defineProps<{
   result: ToolResult;
 }>();
 
-const quizData = computed(() => props.result.jsonData as QuizData | null);
+// Prefer `data`; fall back to `jsonData` for older transcripts.
+const quizData = computed(() => (props.result.data ?? props.result.jsonData) as QuizData | null);
 </script>

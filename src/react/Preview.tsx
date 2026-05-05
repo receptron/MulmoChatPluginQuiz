@@ -5,10 +5,11 @@
 import type { PreviewComponentProps } from "gui-chat-protocol";
 import type { QuizData } from "../core/types";
 
-type PreviewProps = PreviewComponentProps<never, QuizData>;
+type PreviewProps = PreviewComponentProps<QuizData, QuizData>;
 
 export function Preview({ result }: PreviewProps) {
-  const quizData = result.jsonData as QuizData | null;
+  // Prefer `data`; fall back to `jsonData` for older transcripts.
+  const quizData = (result.data ?? result.jsonData) as QuizData | null;
 
   if (!quizData) {
     return null;

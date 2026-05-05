@@ -21,7 +21,7 @@ import Preview from "./Preview.vue";
 /**
  * Quiz plugin instance with Vue components
  */
-export const plugin: ToolPlugin<never, QuizData, QuizArgs> = {
+export const plugin: ToolPlugin<QuizData, QuizData, QuizArgs> = {
   ...pluginCore,
   viewComponent: View,
   previewComponent: Preview,

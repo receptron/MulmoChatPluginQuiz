@@ -17,7 +17,7 @@ import { SAMPLES } from "./samples";
 export const executeQuiz = async (
   _context: ToolContext,
   args: QuizArgs,
-): Promise<ToolResult<never, QuizData>> => {
+): Promise<ToolResult<QuizData, QuizData>> => {
   try {
     const { title, questions } = args;
 
@@ -46,6 +46,10 @@ export const executeQuiz = async (
 
     return {
       message: `Quiz presented with ${questions.length} question${questions.length > 1 ? "s" : ""}`,
+      // Two audiences, one payload: `data` drives the view (the
+      // host's render-eligibility signal), `jsonData` lets the LLM
+      // read the quiz definition back when the user answers.
+      data: quizData,
       jsonData: quizData,
       instructions:
         "The quiz has been presented to the user. Wait for the user to submit their answers. They will tell you their answers in text format.",
@@ -64,7 +68,7 @@ export const executeQuiz = async (
 // Core Plugin (without UI components)
 // ============================================================================
 
-export const pluginCore: ToolPluginCore<never, QuizData, QuizArgs> = {
+export const pluginCore: ToolPluginCore<QuizData, QuizData, QuizArgs> = {
   toolDefinition: TOOL_DEFINITION,
   execute: executeQuiz,
   generatingMessage: "Preparing quiz...",

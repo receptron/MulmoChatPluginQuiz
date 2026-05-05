@@ -84,8 +84,12 @@ const userAnswers = ref<(number | null)[]>([]);
 watch(
   () => props.selectedResult,
   (newResult) => {
-    if (newResult?.toolName === TOOL_NAME && newResult.jsonData) {
-      quizData.value = newResult.jsonData as QuizData;
+    // Prefer `data` (the protocol's render-eligibility payload);
+    // fall back to `jsonData` for older transcripts written before
+    // the plugin set both.
+    const payload = (newResult?.data ?? newResult?.jsonData) as QuizData | undefined;
+    if (newResult?.toolName === TOOL_NAME && payload) {
+      quizData.value = payload;
       // Restore user answers from viewState or initialize new array
       if (newResult.viewState?.userAnswers) {
         userAnswers.value = newResult.viewState.userAnswers as (number | null)[];

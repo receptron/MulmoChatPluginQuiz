@@ -7,15 +7,17 @@ import type { ViewComponentProps } from "gui-chat-protocol";
 import type { QuizData } from "../core/types";
 import { TOOL_NAME } from "../core/definition";
 
-type ViewProps = ViewComponentProps<never, QuizData>;
+type ViewProps = ViewComponentProps<QuizData, QuizData>;
 
 export function View({ selectedResult, sendTextMessage, onUpdateResult }: ViewProps) {
   const [quizData, setQuizData] = useState<QuizData | null>(null);
   const [userAnswers, setUserAnswers] = useState<(number | null)[]>([]);
 
   useEffect(() => {
-    if (selectedResult?.toolName === TOOL_NAME && selectedResult.jsonData) {
-      const data = selectedResult.jsonData as QuizData;
+    // Prefer `data`; fall back to `jsonData` for older transcripts.
+    const payload = (selectedResult?.data ?? selectedResult?.jsonData) as QuizData | undefined;
+    if (selectedResult?.toolName === TOOL_NAME && payload) {
+      const data = payload;
       setQuizData(data);
       // Restore user answers from viewState or initialize new array
       if (selectedResult.viewState?.userAnswers) {
