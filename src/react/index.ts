@@ -21,7 +21,7 @@ import { Preview } from "./Preview";
 /**
  * Quiz plugin instance with React components
  */
-export const plugin: ToolPluginReact<never, QuizData, QuizArgs> = {
+export const plugin: ToolPluginReact<QuizData, QuizData, QuizArgs> = {
   ...pluginCore,
   ViewComponent: View,
   PreviewComponent: Preview,

@@ -16,7 +16,10 @@ export interface QuizQuestion {
   correctAnswer?: number;
 }
 
-/** Quiz data stored in result.jsonData */
+/** Quiz data — set on both `result.data` (the view binds it; the
+ *  protocol's render-eligibility signal) and `result.jsonData` (the
+ *  LLM reads it back when the user answers). Same payload, two
+ *  audiences. */
 export interface QuizData {
   title?: string;
   questions: QuizQuestion[];
