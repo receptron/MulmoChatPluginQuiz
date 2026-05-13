@@ -219,3 +219,8 @@ interface ToolPlugin<T, J, A> extends ToolPluginCore<T, J, A> {
 ## ライセンス
 
 MIT
+
+## 関連
+
+- プロトコル仕様: [gui-chat-protocol](https://github.com/receptron/gui-chat-protocol)
+- このプロトコルを使ったリファレンス実装: [mulmoclaude](https://github.com/receptron/mulmoclaude) · [MulmoChat](https://github.com/receptron/MulmoChat)
