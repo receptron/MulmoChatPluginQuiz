@@ -31,8 +31,11 @@ MulmoChat用のクイズプラグイン。複数選択式のクイズをユー�
 1. プラグインをインストール:
 ```bash
 cd MulmoChat
-yarn add @mulmochat-plugin/quiz
+yarn add @mulmochat-plugin/quiz gui-chat-protocol
 ```
+
+> `gui-chat-protocol` is a peer dependency — install it alongside the plugin; the host application provides the runtime and this plugin only declares the compatible range.
+
 
 2. MulmoChatの`src/tools/index.ts`でインポート:
 ```typescript
