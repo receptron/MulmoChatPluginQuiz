@@ -39,8 +39,11 @@ It demonstrates the **framework-agnostic core architecture** with **Vue and Reac
 1. Install the plugin:
 ```bash
 cd MulmoChat
-yarn add @mulmochat-plugin/quiz
+yarn add @mulmochat-plugin/quiz gui-chat-protocol
 ```
+
+> `gui-chat-protocol` is a peer dependency — install it alongside the plugin; the host application provides the runtime and this plugin only declares the compatible range.
+
 
 2. Import in MulmoChat's `src/tools/index.ts`:
 ```typescript
