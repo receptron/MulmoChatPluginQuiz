@@ -1,6 +1,7 @@
 # MulmoChat Plugin Quiz
 
 [![npm version](https://badge.fury.io/js/%40mulmochat-plugin%2Fquiz.svg)](https://www.npmjs.com/package/@mulmochat-plugin/quiz)
+[![scoria](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/receptron/MulmoChatPluginQuiz/badges/scoria.json)](https://github.com/receptron/MulmoChatPluginQuiz/actions/workflows/scoria.yml)
 
 > **📦 Template Repository**
 > This is the reference implementation for [MulmoChat](https://github.com/receptron/MulmoChat) plugins.
